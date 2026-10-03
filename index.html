@@ -92,9 +92,18 @@ h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
 
 .qcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 16px 18px;border-radius:28px;background:var(--panel);text-align:center}
 .qcount{font-size:15px;color:var(--ink-soft);font-weight:700}
-.calc{font-family:var(--display);font-weight:800;font-size:clamp(46px,13vw,72px);line-height:1;display:flex;align-items:center;gap:.25em;flex-wrap:wrap;justify-content:center;font-variant-numeric:tabular-nums}
+.calc{font-family:var(--display);font-weight:800;font-size:clamp(38px,11vw,72px);line-height:1;display:flex;align-items:center;gap:.22em;justify-content:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qcard.compact{padding:12px 12px 10px;gap:4px}
+.qcard.compact .calc{font-size:clamp(32px,9vw,52px)}
+.qcard.compact .msg{min-height:0;font-size:17px}
+.app.playing{gap:14px}
+.gamebar{flex-wrap:nowrap}
+.gamebar .chip{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.gamebar .iconbtn{flex:none}
+/* clavier toujours visible en bas de l'écran ; l'aide défile au-dessus */
+.dock{position:sticky;bottom:0;z-index:2;margin-inline:-16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--night);box-shadow:0 -12px 16px -8px var(--night)}
 .calc .op{color:var(--sky)}
-.answer{min-width:1.9em;padding:.05em .2em;border-radius:18px;border:4px dashed var(--ink-soft);color:var(--star);text-align:center}
+.answer{min-width:1.8em;padding:.05em .2em;border-radius:18px;border:4px dashed var(--ink-soft);color:var(--star);text-align:center}
 .answer.empty{color:var(--line)}
 .answer.good{border-style:solid;border-color:var(--mint);color:var(--mint);animation:pop .4s}
 .answer.bad{border-style:solid;border-color:var(--rocket);color:var(--rocket);animation:shake .4s}
@@ -108,8 +117,9 @@ h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
 .toolbtn[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--night)}
 
 .aid{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;border-radius:22px;border:2px solid var(--line)}
-.blocks{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap}
+.blocks{display:flex;align-items:flex-end;justify-content:center;gap:14px}
 .grp{display:flex;flex-direction:column;align-items:center;gap:6px}
+.grp{min-width:0}
 .grp .cubes{display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap;justify-content:center;max-width:220px}
 .grp .lbl{font-size:14px;color:var(--ink-soft);text-align:center}
 .ten{width:12px;height:80px;border-radius:2px;background:repeating-linear-gradient(to bottom,var(--sky) 0 7px,var(--night-2) 7px 8px)}
@@ -126,6 +136,8 @@ h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
 .col .res{color:var(--mint)}
 .col .tens{color:var(--sky)}
 .steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:4px;max-width:34em}
+.aid.cols{flex-direction:row;align-items:center;justify-content:center;gap:18px}
+.explain{display:flex;flex-direction:column;gap:8px;min-width:0}
 .legend{font-size:14px;color:var(--ink-soft)}
 
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -206,8 +218,28 @@ td.num{text-align:right;white-space:nowrap}
 .ship .flame{animation:flick .15s infinite alternate}
 @keyframes flick{to{transform:scaleX(1.35);transform-origin:right center}}
 
+@media (max-width:480px){
+  .aid{padding:10px;gap:8px}
+  .aid.cols{gap:10px}
+  .col{font-size:28px}
+  .col .carry{font-size:17px}
+  .steps{font-size:15px;line-height:1.35;padding-left:1.2em}
+  .blocks{gap:8px}
+  .grp .lbl{font-size:12px}
+  .ten{width:8px;height:52px;background:repeating-linear-gradient(to bottom,var(--sky) 0 4.2px,var(--night-2) 4.2px 5.2px)}
+  .units{grid-template-columns:repeat(5,8px)}
+  .one{width:8px;height:8px}
+  .grp .cubes{gap:3px;max-width:120px}
+  .bigop{font-size:26px}
+  .track{height:34px}
+  .track .rail{top:15px}
+  .track .ship{top:2px;width:44px;margin-left:-22px}
+  .track .goal{top:2px;width:30px;height:30px;right:-32px}
+  .tools .toolbtn{padding:6px 12px;font-size:15px}
+  .pad{gap:8px}
+}
 @media (max-width:420px){
-  .key{height:58px}
+  .key{height:52px;font-size:28px}
   .planet{width:64px;height:64px}
   .map::before{left:38px}
   .stop{gap:10px}
@@ -265,6 +297,8 @@ const LEVELS=[
   {id:'mix',      name:'Étoile Royale',skill:'Le grand défi',              ex:'tout mélangé',c1:'#fff4b8',c2:'#e0a800',silver:120,gold:80},
 ];
 const QUESTIONS=10;
+const REVIEW_MAX=8;
+const lvOrder=lv=>{const i=LEVELS.findIndex(l=>l.id===lv);return i<0?LEVELS.length:i};
 
 /* =========================================================
    Sauvegarde (dans ce navigateur)
@@ -398,13 +432,14 @@ let screen='home';
 
 function buildMission(lvId,timed){
   const qs=[],seen=new Set();
-  const bank=timed?[]:lvId==='review'?S.errors.slice(-QUESTIONS):S.errors.filter(e=>e.lv===lvId).slice(-3);
+  // réparation : uniquement les calculs ratés, du plus facile au plus difficile
+  const bank=timed?[]:lvId==='review'?S.errors.slice().sort((x,y)=>lvOrder(x.lv)-lvOrder(y.lv)).slice(0,REVIEW_MAX):S.errors.filter(e=>e.lv===lvId).slice(-3);
   bank.forEach(e=>{if(!seen.has(qkey(e))){seen.add(qkey(e));qs.push({a:e.a,op:e.op,b:e.b,lv:e.lv,review:true})}});
   const gen=GEN[lvId]||GEN.mix;
   let guard=0;
-  while(qs.length<QUESTIONS&&guard++<500){const q=gen();if(seen.has(qkey(q)))continue;seen.add(qkey(q));q.lv=lvId==='review'?'mix':lvId;qs.push(q)}
-  for(let i=qs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]]}
-  return {lv:lvId,qs,i:0,tries:0,input:'',pts:0,first:0,streak:0,best:0,marks:[],aid:false,phase:'ask',msg:'',msgCls:'',
+  while(lvId!=='review'&&qs.length<QUESTIONS&&guard++<500){const q=gen();if(seen.has(qkey(q)))continue;seen.add(qkey(q));q.lv=lvId==='review'?'mix':lvId;qs.push(q)}
+  if(lvId!=='review')for(let i=qs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]]}
+  return {lv:lvId,qs,i:0,tries:0,input:'',pts:0,first:0,streak:0,best:0,marks:[],aid:qs[0]&&qs[0].review?'hint':false,phase:'ask',msg:'',msgCls:'',
     timed:!!timed,elapsed:0,penalty:0,errs:0,tick:performance.now()};
 }
 function startMission(lvId,timed){M=buildMission(lvId,timed);screen='game';render()}
@@ -427,7 +462,7 @@ function submit(){
   if(M.timed){
     M.elapsed+=performance.now()-M.tick;
     if(v===res(q)){M.first++;M.streak++;M.best=Math.max(M.best,M.streak);M.marks[M.i]='ok';M.phase='good';M.msg=pick(['Vite et juste !','Bien !','Exact !','Ça file !']);M.msgCls='good';sfx.good()}
-    else{M.penalty+=5000;M.errs++;M.streak=0;M.marks[M.i]='miss';addError(q);M.phase='timedbad';M.msg=`+5 s · la bonne réponse était ${res(q)}`;M.msgCls='bad';sfx.bad()}
+    else{M.penalty+=5000;M.errs++;M.streak=0;M.marks[M.i]='miss';M.phase='timedbad';M.msg=`+5 s · la bonne réponse était ${res(q)}`;M.msgCls='bad';sfx.bad()}
     save();render();const m=M;setTimeout(()=>{if(M===m)nextQ()},M.phase==='good'?450:1700);
     return;
   }
@@ -448,12 +483,12 @@ function submit(){
 }
 function nextQ(){
   if(!M||screen!=='game')return;
-  M.i++;M.tries=0;M.input='';M.phase='ask';M.aid=false;M.msg='';M.msgCls='';M.wrong='';M.tick=performance.now();
+  M.i++;M.tries=0;M.input='';M.phase='ask';M.aid=M.qs[M.i]&&M.qs[M.i].review?'hint':false;M.msg='';M.msgCls='';M.wrong='';M.tick=performance.now();
   if(M.i>=M.qs.length)(M.timed?finishTimed:finish)();else render();
 }
 function finish(){
   const pts=M.pts,stars=pts>=9?3:pts>=7?2:pts>=5?1:0,lv=M.lv;
-  const out={stars,pts,first:M.first,best:M.best,lv,newSticker:null,unlockedNext:false};
+  const out={stars,pts,first:M.first,best:M.best,lv,n:M.qs.length,newSticker:null,unlockedNext:false};
   if(lv!=='review'){
     const L=S.levels[lv]||(S.levels[lv]={stars:0,plays:0});
     const idx=LEVELS.findIndex(l=>l.id===lv);
@@ -465,8 +500,9 @@ function finish(){
   }
   touchDay();
   save();M.result=out;screen='result';
-  if(stars>=1)sfx.win();
-  if(stars===3)confetti();
+  const allFixed=lv==='review'&&M.first===M.qs.length;
+  if(stars>=1||lv==='review')sfx.win();
+  if(stars===3||allFixed)confetti();
   render();
 }
 
@@ -511,7 +547,7 @@ function viewHome(){
   <div class="hero">${myShip()}<div><h1>Fusée des <span>Nombres</span></h1>
     <p class="hello">${S.name?`Prêt pour le décollage, ${esc(S.name)} ?`:'Prêt pour le décollage, astronaute ?'} Résous les calculs pour voler de planète en planète.</p></div></div>
   <button class="cta" data-go="${L.id}"><span><small>Mission du jour · ${esc(L.name)}</small><b>${esc(L.skill)}</b><small>${L.ex}</small></span><span class="go">Go !</span></button>`;
-  if(S.errors.length)h+=`<button class="review" data-go="review">↻ Mission réparation : ${Math.min(S.errors.length,QUESTIONS)} calcul${S.errors.length>1?'s':''} ratés à retenter</button>`;
+  if(S.errors.length)h+=`<button class="review" data-go="review">↻ Mission réparation : ${Math.min(S.errors.length,REVIEW_MAX)} calcul${Math.min(S.errors.length,REVIEW_MAX)>1?'s':''} à retenter</button>`;
   h+=`<ol class="map" aria-label="Carte des planètes">`;
   LEVELS.forEach((l,i)=>{
     const open=unlocked(i);
@@ -529,17 +565,18 @@ function viewHome(){
 function viewGame(){
   const L=M.lv==='review'?{name:'Réparation',c1:'#cdeeff',c2:'#3b7fd1'}:LEVELS.find(l=>l.id===M.lv);
   const q=M.qs[M.i];
-  let dots='';for(let i=0;i<QUESTIONS;i++)dots+=`<span class="dot ${M.marks[i]||''}"></span>`;
-  const pos=(M.i/(QUESTIONS-1))*100;
+  const N=M.qs.length;
+  let dots='';for(let i=0;i<N;i++)dots+=`<span class="dot ${M.marks[i]||''}"></span>`;
+  const pos=N>1?(M.i/(N-1))*100:0;
   const ansCls=M.phase==='good'?'good':(M.phase==='solution'||M.phase==='timedbad'||(M.msgCls==='bad'&&!M.input))?'bad':'';
   const shown=(M.phase==='solution'||M.phase==='timedbad')?res(q):(M.input||'?');
-  let h=`<div class="bar"><button class="iconbtn" data-nav="home" aria-label="Retour à la carte">← Carte</button><div class="grow"></div>
+  let h=`<div class="bar gamebar"><button class="iconbtn" data-nav="home" aria-label="Retour à la carte">← Carte</button><div class="grow"></div>
     <span class="chip" style="--c1:${L.c1}">${M.timed?'Chrono · ':''}${esc(L.name)}</span>
-    <button class="iconbtn" data-act="sound" aria-label="Son ${S.sound?'activé':'coupé'}">${S.sound?'Son ✓':'Son ✕'}</button></div>
-  <div class="track" style="--c1:${L.c1};--c2:${L.c2}" aria-label="Question ${M.i+1} sur ${QUESTIONS}"><span class="rail"></span><span class="dots">${dots}</span><span class="ship" style="left:${pos}%">${myShip()}</span><span class="goal"></span></div>
-  <section class="qcard">
-    ${M.timed?`<span class="clock" id="clock" aria-hidden="true">${fmt(clockMs())}</span><span class="goals">Calcul ${M.i+1} sur ${QUESTIONS} · fusée argent : ${L.silver} s · or : ${L.gold} s</span>`
-      :`<span class="qcount">Calcul ${M.i+1} sur ${QUESTIONS}${q.review?' · à réparer':''}</span>`}
+    <button class="iconbtn" data-act="sound" aria-label="${S.sound?'Couper le son':'Activer le son'}" aria-pressed="${S.sound}">${S.sound?'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>':'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'}</button></div>
+  <div class="track" style="--c1:${L.c1};--c2:${L.c2}" aria-label="Question ${M.i+1} sur ${N}"><span class="rail"></span><span class="dots">${dots}</span><span class="ship" style="left:${pos}%">${myShip()}</span><span class="goal"></span></div>
+  <section class="qcard ${M.aid?'compact':''}">
+    ${M.timed?`<span class="clock" id="clock" aria-hidden="true">${fmt(clockMs())}</span><span class="goals">Calcul ${M.i+1} sur ${N} · fusée argent : ${L.silver} s · or : ${L.gold} s</span>`
+      :`<span class="qcount">Calcul ${M.i+1} sur ${N}${q.review?' · à réparer':''}</span>`}
     <div class="calc" aria-live="polite"><span>${q.a}</span><span class="op">${sign(q.op)}</span><span>${q.b}</span><span class="op">=</span><span class="answer ${shown==='?'?'empty':''} ${ansCls}">${shown}</span></div>
     <div class="msg ${M.msgCls}" role="status">${esc(M.msg)}</div>
   </section>`;
@@ -549,14 +586,14 @@ function viewGame(){
       <span class="legend">Une barre bleue = 1 dizaine (10). Un cube jaune = 1 unité.</span></div>`;
   }else if(M.aid==='hint'||M.aid==='solution'){
     const c=column(q,M.aid==='solution');
-    h+=`<div class="aid"><div class="col" aria-hidden="true">${c.grid}</div><ol class="steps">${c.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-      ${M.aid==='solution'&&M.wrong?`<span class="legend">Tu avais répondu ${esc(M.wrong)}. Ce calcul reviendra dans une prochaine mission.</span>`:''}</div>`;
+    h+=`<div class="aid cols"><div class="col" aria-hidden="true">${c.grid}</div><div class="explain"><ol class="steps">${c.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+      ${M.aid==='solution'&&M.wrong?`<span class="legend">Tu avais répondu ${esc(M.wrong)}. Ce calcul reviendra dans une prochaine mission.</span>`:''}</div></div>`;
   }
-  if(M.phase==='solution')h+=`<button class="next" data-act="next">J'ai compris, calcul suivant →</button>`;
+  if(M.phase==='solution')h+=`<div class="dock"><button class="next" data-act="next">J'ai compris, calcul suivant →</button></div>`;
   else{
-    h+=`<div class="pad">`;
+    h+=`<div class="dock"><div class="pad">`;
     [1,2,3,4,5,6,7,8,9].forEach(n=>h+=`<button class="key" data-key="${n}">${n}</button>`);
-    h+=`<button class="key del" data-key="del" aria-label="Effacer">⌫</button><button class="key" data-key="0">0</button><button class="key ok" data-key="ok" aria-label="Valider" ${M.input&&M.phase==='ask'?'':'disabled'}>✓</button></div>`;
+    h+=`<button class="key del" data-key="del" aria-label="Effacer">⌫</button><button class="key" data-key="0">0</button><button class="key ok" data-key="ok" aria-label="Valider" ${M.input&&M.phase==='ask'?'':'disabled'}>✓</button></div></div>`;
   }
   return h;
 }
@@ -578,9 +615,16 @@ function viewResult(){
   if(M.result.timed)return viewTimedResult();
   const r=M.result,L=LEVELS.find(l=>l.id===r.lv);
   const titles=['Encore un petit effort !','Mission réussie !','Très belle mission !','Mission parfaite !'];
+  if(r.lv==='review'){
+    const left=S.errors.length;
+    return `<div class="result"><div class="gift" style="border-color:var(--mint)">${myShip().replace('<svg','<svg style="width:96px;height:48px"')}<div><b>Réparations terminées !</b><br>${r.first} calcul${r.first>1?'s':''} réparé${r.first>1?'s':''} sur ${r.n}.</div></div>
+      <h2>${r.first===r.n?'La fusée est comme neuve !':'Bon travail de mécanicien !'}</h2>
+      <p class="note">${left?`Encore ${left} calcul${left>1?'s':''} à réparer. ${left>1?'Ils reviendront':'Il reviendra'} dans les prochaines missions.`:'Plus aucun calcul à réparer. Bravo !'}</p>
+      <div class="actions">${left?`<button class="cta" data-go="review" style="justify-content:center;text-align:center"><b>Continuer les réparations</b></button>`:''}<button class="iconbtn" data-nav="home" style="justify-content:center">Retour à la carte</button></div></div>`;
+  }
   let h=`<div class="result"><div class="bigstars">${[0,1,2].map(i=>STAR(i<r.stars)).join('')}</div>
-    <h2>${r.lv==='review'?'Réparations terminées !':titles[r.stars]}</h2>
-    <div class="facts"><div class="fact"><b>${r.first} / ${QUESTIONS}</b><span>du premier coup</span></div><div class="fact"><b>${r.best}</b><span>meilleure série</span></div></div>`;
+    <h2>${titles[r.stars]}</h2>
+    <div class="facts"><div class="fact"><b>${r.first} / ${r.n}</b><span>du premier coup</span></div><div class="fact"><b>${r.best}</b><span>meilleure série</span></div></div>`;
   if(r.stars===0&&r.lv!=='review')h+=`<p class="note">Il faut au moins 5 points pour gagner une étoile. Utilise les cubes et le calcul posé, tu vas y arriver !</p>`;
   if(r.newSticker)h+=`<div class="gift">${alien(r.newSticker.idx,r.newSticker.gold)}<div><b>Nouvel alien ${r.newSticker.gold?'doré ':''}!</b><br>Les habitants de ${esc(LEVELS[r.newSticker.idx].name)} rejoignent ton album.</div></div>`;
   if(r.unlockedNext){const n=LEVELS[LEVELS.indexOf(L)+1];h+=`<p class="note">Nouvelle planète débloquée : <b style="color:var(--star)">${esc(n.name)}</b></p>`}
@@ -631,6 +675,7 @@ function viewParents(){
 }
 
 function render(){
+  app.classList.toggle('playing',screen==='game');
   app.innerHTML=screen==='game'?viewGame():screen==='result'?viewResult():screen==='album'?viewAlbum():screen==='parents'?viewParents():screen==='hangar'?viewHangar():viewHome();
 }
 
