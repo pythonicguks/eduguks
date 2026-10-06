@@ -1,0 +1,64 @@
+/* Écrans de résultat, collections (album, hangar, compagnons) et espace parents */
+/* ---------- result ---------- */
+.result{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;padding-top:12px}
+.result h2{font-size:clamp(34px,8vw,46px)}
+.bigstars{display:flex;gap:10px}
+.bigstars svg{width:72px;height:72px}
+.bigstars .on{animation:pop .5s backwards}
+.bigstars .on:nth-child(2){animation-delay:.25s}
+.bigstars .on:nth-child(3){animation-delay:.5s}
+.facts{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.fact{padding:10px 16px;border-radius:16px;background:var(--panel);min-width:130px}
+.fact b{display:block;font-family:var(--display);font-size:30px;line-height:1;color:var(--star)}
+.fact span{font-size:15px;color:var(--ink-soft)}
+.gift{display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:22px;border:2px solid var(--star);text-align:left}
+.gift svg{width:84px;height:84px;flex:none}
+.gift .ship-art svg{width:120px;height:60px}
+.actions{display:flex;flex-direction:column;gap:12px;width:100%}
+
+/* ---------- album ---------- */
+.album{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:20px;background:var(--panel);text-align:center}
+.slot svg{width:100%;max-width:96px;aspect-ratio:1}
+.slot .n{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1}
+.slot.empty svg{opacity:.25;filter:grayscale(1)}
+.slot.gold{box-shadow:inset 0 0 0 3px var(--star)}
+.slot.on{box-shadow:inset 0 0 0 3px var(--mint)}
+.slot .st{font-size:13px;color:var(--ink-soft);line-height:1.2}
+.slot.on .st{color:var(--mint);font-weight:700}
+.palbig svg{width:150px;height:150px;animation:hop 2.6s ease-in-out infinite}
+.note{color:var(--ink-soft);font-size:16px;margin:0}
+.hangar{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.bay{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border-radius:20px;background:var(--panel);text-align:center;border:3px solid transparent}
+.bay svg{width:100%;max-width:150px;aspect-ratio:2/1}
+.bay .n{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.1}
+.bay .st{font-size:14px;color:var(--ink-soft)}
+.bay.locked svg{opacity:.25;filter:grayscale(1) brightness(.6)}
+.bay.locked{cursor:default}
+.bay.on{border-color:var(--mint)}
+.bay.on .st{color:var(--mint);font-weight:700}
+.bigtime{font-family:var(--display);font-weight:800;font-size:clamp(56px,16vw,84px);line-height:1;color:var(--star);font-variant-numeric:tabular-nums}
+.targets{display:flex;flex-direction:column;gap:6px;align-items:stretch;width:100%;max-width:340px}
+.target{display:flex;justify-content:space-between;gap:10px;padding:8px 14px;border-radius:14px;background:var(--panel);font-weight:700}
+.target.hit{box-shadow:inset 0 0 0 2px var(--mint);color:var(--mint)}
+.gift .ship-art{width:120px;flex:none}
+
+/* ---------- parents ---------- */
+.parents{display:flex;flex-direction:column;gap:18px}
+.parents h2{font-size:32px}
+.parents h3{font-size:22px;margin-bottom:8px}
+.box{padding:16px;border-radius:20px;background:var(--panel);min-width:0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+td.num{text-align:right;white-space:nowrap}
+.meter{display:inline-block;width:52px;height:8px;border-radius:4px;background:var(--line);vertical-align:middle;margin-right:6px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--mint)}
+.errs{display:flex;flex-wrap:wrap;gap:8px}
+.err{padding:4px 10px;border-radius:10px;background:var(--night-2);font-family:var(--display);font-weight:700}
+.field{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field input{flex:1;min-width:0;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--night);color:var(--ink);font:inherit}
+.tips{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;font-size:16px}
+.danger{color:var(--rocket);border:2px solid var(--rocket);padding:8px 14px;border-radius:12px;font-weight:700}
+.danger.solid{background:var(--rocket);color:var(--night)}
