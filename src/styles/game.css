@@ -1,0 +1,96 @@
+/* Écran de jeu : piste, calcul, aides et clavier */
+.track{position:relative;height:44px;margin-inline:4px 34px}
+.track .rail{position:absolute;left:0;right:0;top:20px;height:4px;border-radius:2px;background:var(--line)}
+.track .dots{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center}
+.track .dot{width:12px;height:12px;border-radius:50%;background:var(--line);border:2px solid var(--night)}
+.track .dot.ok{background:var(--mint)}
+.track .dot.half{background:var(--star)}
+.track .dot.miss{background:var(--rocket)}
+.track .ship{position:absolute;top:6px;width:52px;margin-left:-26px;transition:left .6s cubic-bezier(.3,1.4,.6,1)}
+.track .goal{position:absolute;right:-34px;top:4px;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 32% 30%,var(--c1),var(--c2) 70%)}
+
+.qcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 16px 18px;border-radius:28px;background:var(--panel);text-align:center}
+.qcount{font-size:15px;color:var(--ink-soft);font-weight:700}
+.calc{font-family:var(--display);font-weight:800;font-size:clamp(38px,11vw,72px);line-height:1;display:flex;align-items:center;gap:.22em;justify-content:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.qcard.compact{padding:12px 12px 10px;gap:4px}
+.qcard.compact .calc{font-size:clamp(32px,9vw,52px)}
+.qcard.compact .msg{min-height:0;font-size:17px}
+.app.playing{gap:14px}
+.gamebar{flex-wrap:nowrap}
+.gamebar .chip{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.gamebar .iconbtn{flex:none}
+/* clavier toujours visible en bas de l'écran ; l'aide défile au-dessus */
+.dock{position:sticky;bottom:0;z-index:2;margin-inline:-16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--night);box-shadow:0 -12px 16px -8px var(--night)}
+.calc .op{color:var(--sky)}
+.answer{min-width:1.8em;padding:.05em .2em;border-radius:18px;border:4px dashed var(--ink-soft);color:var(--star);text-align:center}
+.answer.empty{color:var(--line)}
+.answer.good{border-style:solid;border-color:var(--mint);color:var(--mint);animation:pop .4s}
+.answer.bad{border-style:solid;border-color:var(--rocket);color:var(--rocket);animation:shake .4s}
+@keyframes pop{50%{transform:scale(1.15)}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.msg{min-height:1.5em;font-weight:700;font-size:19px;text-align:center}
+.msg.good{color:var(--mint)} .msg.bad{color:var(--rocket)}
+
+.tools{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.toolbtn{padding:8px 16px;border-radius:999px;border:2px solid var(--line);font-weight:700;font-size:16px}
+.toolbtn[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--night)}
+
+.aid{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;border-radius:22px;border:2px solid var(--line)}
+.blocks{display:flex;align-items:flex-end;justify-content:center;gap:14px}
+.grp{display:flex;flex-direction:column;align-items:center;gap:6px}
+.grp{min-width:0}
+.grp .cubes{display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap;justify-content:center;max-width:220px}
+.grp .lbl{font-size:14px;color:var(--ink-soft);text-align:center}
+.ten{width:12px;height:80px;border-radius:2px;background:repeating-linear-gradient(to bottom,var(--sky) 0 7px,var(--night-2) 7px 8px)}
+.units{display:grid;grid-template-columns:repeat(5,12px);gap:1px}
+.one{width:12px;height:12px;border-radius:2px;background:var(--star)}
+.grp.minus .one,.grp.minus .ten{opacity:.9}
+.bigop{font-family:var(--display);font-weight:800;font-size:34px;color:var(--sky);align-self:center}
+
+.col{font-family:var(--display);font-weight:800;font-size:40px;line-height:1.1;display:grid;grid-template-columns:repeat(3,1.1em);text-align:center;font-variant-numeric:tabular-nums}
+.col .carry{font-size:22px;color:var(--rocket);align-self:end}
+.col .x{text-decoration:line-through;text-decoration-color:var(--rocket);text-decoration-thickness:3px;color:var(--ink-soft)}
+.col sup{font-size:.5em;color:var(--rocket);vertical-align:.7em}
+.col .rule{grid-column:1/-1;height:4px;border-radius:2px;background:var(--ink);margin:4px 0}
+.col .res{color:var(--mint)}
+.col .tens{color:var(--sky)}
+.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:4px;max-width:34em}
+.aid.cols{flex-direction:row;align-items:center;justify-content:center;gap:18px}
+.explain{display:flex;flex-direction:column;gap:8px;min-width:0}
+.legend{font-size:14px;color:var(--ink-soft)}
+
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.key{height:64px;border-radius:18px;background:var(--panel);font-family:var(--display);font-weight:800;font-size:32px;box-shadow:0 5px 0 var(--night-2)}
+.key:active{transform:translateY(4px);box-shadow:0 1px 0 var(--night-2)}
+.key.del{color:var(--ink-soft);font-size:26px}
+.key.ok{background:var(--mint);color:var(--night);box-shadow:0 5px 0 #2a9f7a}
+.key.ok:disabled{opacity:.4}
+.next{width:100%;min-height:64px;padding:8px 14px;line-height:1.1;border-radius:18px;background:var(--star);color:var(--night);font-family:var(--display);font-weight:800;font-size:26px;box-shadow:0 5px 0 #c19a12}
+
+.clock{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;color:var(--star);font-variant-numeric:tabular-nums}
+.goals{font-size:15px;color:var(--ink-soft)}
+
+@media (max-width:480px){
+  .aid{padding:10px;gap:8px}
+  .aid.cols{gap:10px}
+  .col{font-size:28px}
+  .col .carry{font-size:17px}
+  .steps{font-size:15px;line-height:1.35;padding-left:1.2em}
+  .blocks{gap:8px}
+  .grp .lbl{font-size:12px}
+  .ten{width:8px;height:52px;background:repeating-linear-gradient(to bottom,var(--sky) 0 4.2px,var(--night-2) 4.2px 5.2px)}
+  .units{grid-template-columns:repeat(5,8px)}
+  .one{width:8px;height:8px}
+  .grp .cubes{gap:3px;max-width:120px}
+  .bigop{font-size:26px}
+  .track{height:34px}
+  .track .rail{top:15px}
+  .track .ship{top:2px;width:44px;margin-left:-22px}
+  .track .goal{top:2px;width:30px;height:30px;right:-32px}
+  .tools .toolbtn{padding:6px 12px;font-size:15px}
+  .pad{gap:8px}
+}
+
+@media (max-width:420px){
+  .key{height:52px;font-size:28px}
+}

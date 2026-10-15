@@ -1,0 +1,43 @@
+/* Fusée des Nombres : couleurs, typographie et éléments communs.
+ Mise en page : appli sur un écran. Une carte verticale de planètes (une par compétence) ; chaque mission est un cockpit avec le calcul, la piste de la fusée et un grand clavier. */
+:root{
+  --night:#12163a; --night-2:#1b2155; --panel:#242b69; --line:#3b4494;
+  --ink:#f5f3ff; --ink-soft:#b7bbe9;
+  --star:#ffd23f; --silver:#cfd6ee; --rocket:#ff7a59; --mint:#53e0b0; --sky:#6cc4ff;
+  --display:"Baloo 2","Comic Sans MS",system-ui,sans-serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--night);background-image:radial-gradient(120% 70% at 50% 0%,var(--night-2) 0%,var(--night) 70%);background-attachment:fixed;color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.45;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:3px solid var(--star);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
+
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+#sky i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--ink);opacity:.5;animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{to{opacity:.1}}
+
+.app{position:relative;z-index:1;max-width:640px;margin:0 auto;padding-inline:16px;padding-block:16px 32px;display:flex;flex-direction:column;gap:20px;min-height:100%}
+
+/* ---------- top bar ---------- */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bar .grow{flex:1;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--panel);font-family:var(--display);font-weight:700;font-size:18px;white-space:nowrap}
+.chip .s{color:var(--star)}
+.chip .f{color:var(--rocket)}
+.iconbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:14px;background:var(--panel);font-family:var(--display);font-weight:700;font-size:17px}
+.iconbtn:hover{background:var(--line)}
+
+/* confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall 2.4s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+
+.ship .flame{animation:flick .15s infinite alternate}
+@keyframes flick{to{transform:scaleX(1.35);transform-origin:right center}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
