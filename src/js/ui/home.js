@@ -1,10 +1,16 @@
 "use strict";
 /* Écran d'accueil : carte des planètes et compagnon */
 
+// la mission du jour : la première planète ouverte du monde affiché qui n'a pas ses 3 étoiles
 function suggested(){
-  for(let i=0;i<LEVELS.length;i++){if(unlocked(i)&&starsOf(LEVELS[i].id)<3)return i}
-  return LEVELS.length-1;
+  const idx=LEVELS.map((l,i)=>i).filter(i=>worldOf(LEVELS[i])===S.world);
+  return idx.find(i=>unlocked(i)&&starsOf(LEVELS[i].id)<3)??idx[idx.length-1];
 }
+const WORLD_ICONS={
+  calc:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M3 7h8M14 7h7M14 16h7M14 20h7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4 15l6 6M10 15l-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 6.5V12l3.5 2.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>`,
+};
+const worldTabs=()=>`<div class="worlds" role="tablist" aria-label="Mondes">${WORLDS.map(w=>`<button role="tab" aria-selected="${S.world===w.id}" data-world="${w.id}">${WORLD_ICONS[w.id]}${w.name}</button>`).join('')}</div>`;
 function viewBuddy(){
   if(S.pal&&S.pals[S.pal]){const P=PALS[S.pal];return `<button class="buddy" data-nav="pals" aria-label="${esc(P.name)}, ton compagnon. Voir mes compagnons">${palSVG(S.pal)}<span class="bubble">${esc(P.cry)} ${esc(pick(BUDDY_LINES))}</span></button>`}
   if(LEVELS.some(l=>chronoOpen(l.id)))return `<button class="buddy" data-nav="pals">${palSVG('tens','sil')}<span class="bubble">Qui est-ce ? Réussis une énigme pour gagner ton premier compagnon !</span></button>`;
@@ -17,12 +23,14 @@ function viewHome(){
     <span class="chip" title="Étoiles gagnées"><span class="s">★</span>${totalStars()} / ${LEVELS.length*3}</span>
     <span class="chip" title="Jours d'entraînement d'affilée"><span class="f">▲</span>${streak} jour${streak>1?'s':''}</span></div>
   <div class="hero">${myShip()}<div><h1>Fusée des <span>Nombres</span></h1>
-    <p class="hello">${S.name?`Prêt pour le décollage, ${esc(S.name)} ?`:'Prêt pour le décollage, astronaute ?'} Résous les calculs pour voler de planète en planète.</p></div></div>
+    <p class="hello">${S.name?`Prêt pour le décollage, ${esc(S.name)} ?`:'Prêt pour le décollage, astronaute ?'} Relève les défis pour voler de planète en planète.</p></div></div>
   ${viewBuddy()}
+  ${worldTabs()}
   <button class="cta" data-go="${L.id}"><span><small>Mission du jour · ${esc(L.name)}</small><b>${esc(L.skill)}</b><small>${L.ex}</small></span><span class="go">Go !</span></button>`;
-  if(S.errors.length)h+=`<button class="review" data-go="review">↻ Mission réparation : ${Math.min(S.errors.length,REVIEW_MAX)} calcul${Math.min(S.errors.length,REVIEW_MAX)>1?'s':''} à retenter</button>`;
+  if(S.world==='calc'&&S.errors.length)h+=`<button class="review" data-go="review">↻ Mission réparation : ${Math.min(S.errors.length,REVIEW_MAX)} calcul${Math.min(S.errors.length,REVIEW_MAX)>1?'s':''} à retenter</button>`;
   h+=`<ol class="map" aria-label="Carte des planètes">`;
   LEVELS.forEach((l,i)=>{
+    if(worldOf(l)!==S.world)return;
     const open=unlocked(i);
     const co=chronoOpen(l.id),best=S.times[l.id],rk=S.rockets[l.id],rb=S.riddles[l.id],pal=S.pals[l.id];
     h+=`<li><button class="stop" ${open?`data-go="${l.id}"`:'disabled'} style="--c1:${l.c1};--c2:${l.c2}" aria-label="${esc(l.name)}, ${esc(l.skill)}${open?'':', verrouillée'}">

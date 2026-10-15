@@ -1,5 +1,5 @@
 "use strict";
-/* Compagnons (gagnés en mode énigme) */
+/* Compagnons (gagnés en mode énigme), un par planète ; la clé est l'identifiant de la planète */
 
 /* compagnons : dessins simplifiés, un par planète (gagné en mode énigme) */
 const EYE=(x,y,rx,ry,c)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c}"/><circle cx="${x+rx*.3}" cy="${y-ry*.35}" r="${rx*.38}" fill="#fff" stroke="none"/>`;
@@ -73,5 +73,36 @@ const PALS={
     <path d="M30 36 L27 16 L42 28 Z" fill="#f4a6c8"/><path d="M66 36 L69 16 L54 28 Z" fill="#f4a6c8"/>
     <ellipse cx="48" cy="45" rx="22" ry="18" fill="#f4a6c8"/>${EYE(40,46,5,7,'#2c6fbb')}${EYE(56,46,5,7,'#2c6fbb')}
     <path d="M45 55 Q48 57 51 55" fill="none"/>`},
+  // série Horloges
+  clockHours:{name:'Togepi',cry:'Togepriii !',art:`<path d="M34 30 L36 14 L43 25 L50 10 L57 25 L64 14 L66 30 Z" fill="#fbe7b0"/>
+    <ellipse cx="50" cy="40" rx="20" ry="17" fill="#fbe7b0"/>
+    <ellipse cx="25" cy="58" rx="5" ry="6" fill="#fbe7b0"/><ellipse cx="75" cy="58" rx="5" ry="6" fill="#fbe7b0"/>
+    <ellipse cx="40" cy="92" rx="6" ry="3.5" fill="#fbe7b0"/><ellipse cx="60" cy="92" rx="6" ry="3.5" fill="#fbe7b0"/>
+    <path d="M28 62 Q28 92 50 92 Q72 92 72 62 L66 55 L60 61 L54 53 L48 61 L42 54 L36 61 L30 55 Z" fill="#fffdf5"/>
+    <path d="M36 72 L44 80 L33 84Z" fill="#e8433f" stroke="none"/><path d="M57 70 L66 77 L56 83Z" fill="#3b7fd1" stroke="none"/><path d="M47 84 L53 88 L45 90Z" fill="#3b7fd1" stroke="none"/>
+    ${EYE(43,39,3,4.5,'#2b2b2b')}${EYE(57,39,3,4.5,'#2b2b2b')}
+    <path d="M45 46 Q50 52 55 46 Z" fill="#c0392b"/>`},
+  clockHalf:{name:'Magicarpe',cry:'Carpe carpe… plouf !',art:`<path d="M76 55 L95 36 L90 55 L95 74 Z" fill="#f8e0a0"/>
+    <path d="M32 38 L38 20 L46 33 L54 16 L60 33 L66 22 L68 38 Z" fill="#f8e0a0"/>
+    <ellipse cx="50" cy="55" rx="30" ry="22" fill="#e8553a"/>
+    <path d="M52 46 Q58 54 52 62 M62 45 Q68 54 62 63 M72 48 Q76 55 72 62" fill="none" stroke="#b83a22"/>
+    <path d="M42 74 L50 90 L58 74 Z" fill="#f8e0a0"/>
+    <ellipse cx="22" cy="57" rx="5" ry="7" fill="#f8e0a0"/>
+    <circle cx="36" cy="47" r="8" fill="#fff"/><circle cx="35" cy="47" r="2.2" fill="#2b2b2b" stroke="none"/>
+    <path d="M24 60 Q12 62 10 74 M24 52 Q12 48 12 38" fill="none" stroke="#f8e0a0" stroke-width="3"/>`},
+  clockQuarter:{name:'Ectoplasma',cry:'Ecto ! Hé hé hé…',art:`<path d="M22 42 L13 27 L30 33 L32 18 L42 29 L50 14 L58 29 L68 18 L70 33 L87 27 L78 42 Z" fill="#6a4c9c"/>
+    <ellipse cx="16" cy="62" rx="6" ry="8" fill="#6a4c9c"/><ellipse cx="84" cy="62" rx="6" ry="8" fill="#6a4c9c"/>
+    <ellipse cx="36" cy="89" rx="9" ry="5" fill="#6a4c9c"/><ellipse cx="64" cy="89" rx="9" ry="5" fill="#6a4c9c"/>
+    <ellipse cx="50" cy="58" rx="32" ry="28" fill="#6a4c9c"/>
+    <path d="M30 46 L44 51 L41 57 Q32 57 30 46Z" fill="#e8433f"/><path d="M70 46 L56 51 L59 57 Q68 57 70 46Z" fill="#e8433f"/>
+    <circle cx="39" cy="53" r="1.7" fill="#2b2b2b" stroke="none"/><circle cx="61" cy="53" r="1.7" fill="#2b2b2b" stroke="none"/>
+    <path d="M30 64 Q50 82 70 64 Q50 71 30 64Z" fill="#fff"/><path d="M41 68 V73 M50 69 V76 M59 68 V73" fill="none" stroke-width="1.2"/>`},
+  clockFive:{name:'Voltorbe',cry:'Volt ! Bzzz…',art:`<circle cx="50" cy="54" r="34" fill="#fffdf5"/><path d="M16 54 A34 34 0 0 1 84 54 Z" fill="#e8433f"/>
+    <path d="M30 49 L46 55 L44 63 Q32 63 30 49Z" fill="#fff"/><path d="M70 49 L54 55 L56 63 Q68 63 70 49Z" fill="#fff"/>
+    <circle cx="40" cy="58" r="2.4" fill="#2b2b2b" stroke="none"/><circle cx="60" cy="58" r="2.4" fill="#2b2b2b" stroke="none"/>
+    <ellipse cx="35" cy="33" rx="7" ry="4" fill="#fff" opacity=".55" stroke="none" transform="rotate(-30 35 33)"/>`},
+  clockDay:{name:'Métamorph',cry:'Méta… morph !',art:`<path d="M14 84 Q10 62 26 56 Q22 34 42 34 Q50 24 60 34 Q80 32 76 56 Q92 64 86 84 Q50 92 14 84Z" fill="#c9a0dc"/>
+    <circle cx="42" cy="54" r="2.2" fill="#2b2b2b" stroke="none"/><circle cx="58" cy="54" r="2.2" fill="#2b2b2b" stroke="none"/>
+    <path d="M40 66 Q45 63 50 66 Q55 69 60 66" fill="none"/>`},
 };
 const palSVG=(id,cls)=>`<svg viewBox="0 0 100 100" ${cls?`class="${cls}"`:''} aria-hidden="true"><g stroke="#2b2b2b" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${PALS[id].art}</g></svg>`;

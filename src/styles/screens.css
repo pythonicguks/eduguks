@@ -17,10 +17,10 @@
 .actions{display:flex;flex-direction:column;gap:12px;width:100%}
 
 /* ---------- album ---------- */
-.album{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.album{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:20px;background:var(--panel);text-align:center}
 .slot svg{width:100%;max-width:96px;aspect-ratio:1}
-.slot .n{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1}
+.slot .n{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1;overflow-wrap:anywhere}
 .slot.empty svg{opacity:.25;filter:grayscale(1)}
 .slot.gold{box-shadow:inset 0 0 0 3px var(--star)}
 .slot.on{box-shadow:inset 0 0 0 3px var(--mint)}
@@ -28,7 +28,7 @@
 .slot.on .st{color:var(--mint);font-weight:700}
 .palbig svg{width:150px;height:150px;animation:hop 2.6s ease-in-out infinite}
 .note{color:var(--ink-soft);font-size:16px;margin:0}
-.hangar{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.hangar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .bay{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border-radius:20px;background:var(--panel);text-align:center;border:3px solid transparent}
 .bay svg{width:100%;max-width:150px;aspect-ratio:2/1}
 .bay .n{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.1}

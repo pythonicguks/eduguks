@@ -1,10 +1,11 @@
 "use strict";
-/* Déroulement d'une mission (normale, chrono, énigme, réparation) : questions, réponses, fin de mission */
+/* Déroulement d'une mission (normale, chrono, énigme, réparation) : questions, réponses, fin de mission.
+   Les questions sont des calculs ({a,op,b}) ou des horloges ({clock,h,m,pm}, voir game/clock.js). */
 
 let M=null;   // mission en cours
 let screen='home';
 
-// mode : undefined (normal), 'timed' (chrono) ou 'riddle' (énigme : trouver le nombre caché)
+// mode : undefined (normal), 'timed' (chrono) ou 'riddle' (énigme : trouver le nombre caché, ou régler l'horloge)
 function buildMission(lvId,mode){
   const timed=mode==='timed',riddle=mode==='riddle';
   const qs=[],seen=new Set();
@@ -14,11 +15,13 @@ function buildMission(lvId,mode){
   const gen=GEN[lvId]||GEN.mix;
   let guard=0;
   while(lvId!=='review'&&qs.length<QUESTIONS&&guard++<500){const q=gen();if(seen.has(qkey(q)))continue;seen.add(qkey(q));q.lv=lvId==='review'?'mix':lvId;qs.push(q)}
-  if(riddle)qs.forEach(q=>q.hide=Math.random()<.5?'a':'b');
+  if(riddle)qs.forEach(q=>{if(!q.clock)q.hide=Math.random()<.5?'a':'b'});
   if(lvId!=='review')for(let i=qs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]]}
   return {lv:lvId,qs,i:0,tries:0,input:'',pts:0,first:0,streak:0,best:0,marks:[],aid:qs[0]&&qs[0].review?'hint':false,phase:'ask',msg:'',msgCls:'',
-    timed,riddle,elapsed:0,penalty:0,errs:0,tick:performance.now()};
+    timed,riddle,elapsed:0,penalty:0,errs:0,tick:performance.now(),...freshAnswer()};
 }
+// saisie vide pour une nouvelle question : nombre tapé, heure tapée (hh h mm) ou aiguilles à régler
+const freshAnswer=()=>({input:'',hh:'',mm:'',slot:'h',ring:false,set:{h:12,m:0}});
 function startMission(lvId,mode){M=buildMission(lvId,mode);screen='game';render()}
 /* réponse attendue : le résultat, ou le nombre caché en mode énigme */
 const ans=q=>q.hide==='a'?q.a:q.hide==='b'?q.b:res(q);
@@ -38,18 +41,24 @@ function removeError(q){S.errors=S.errors.filter(e=>qkey(e)!==qkey(q))}
 function stat(lv){return S.stats[lv]||(S.stats[lv]={q:0,first:0,missions:0})}
 function cheer(){const c=pick(CHEERS);return S.name&&Math.random()<.35?c.replace(' !',`, ${S.name} !`):c}
 
+// la réponse peut-elle être validée ?
+function answerReady(){const q=M.qs[M.i];return q.clock?(M.riddle||M.hh!==''):M.input!==''}
+function answerRight(q){return q.clock?(M.riddle?clockSetOk(q,M.set):clockReadOk(q,M.hh,M.mm)):parseInt(M.input,10)===ans(q)}
+const answerText=q=>q.clock?clockAnswer(q):String(ans(q));
+const givenText=q=>q.clock?(M.riddle?clockText(M.set.h,M.set.m):clockText(+M.hh,M.mm===''?0:+M.mm)):M.input;
+
 function submit(){
-  if(M.phase!=='ask'||!M.input)return;
-  const q=M.qs[M.i],v=parseInt(M.input,10),st=stat(q.lv);
+  if(M.phase!=='ask'||!answerReady())return;
+  const q=M.qs[M.i],right=answerRight(q),st=stat(q.lv);
   if(M.timed){
     M.elapsed+=performance.now()-M.tick;
-    if(v===res(q)){M.first++;M.streak++;M.best=Math.max(M.best,M.streak);M.marks[M.i]='ok';M.phase='good';M.msg=pick(['Vite et juste !','Bien !','Exact !','Ça file !']);M.msgCls='good';sfx.good()}
-    else{M.penalty+=5000;M.errs++;M.streak=0;M.marks[M.i]='miss';M.phase='timedbad';M.msg=`+5 s · la bonne réponse était ${res(q)}`;M.msgCls='bad';sfx.bad()}
+    if(right){M.first++;M.streak++;M.best=Math.max(M.best,M.streak);M.marks[M.i]='ok';M.phase='good';M.msg=pick(['Vite et juste !','Bien !','Exact !','Ça file !']);M.msgCls='good';sfx.good()}
+    else{M.penalty+=5000;M.errs++;M.streak=0;M.marks[M.i]='miss';M.phase='timedbad';M.msg=`+5 s · la bonne réponse était ${answerText(q)}`;M.msgCls='bad';sfx.bad()}
     save();render();const m=M;setTimeout(()=>{if(M===m)nextQ()},M.phase==='good'?450:1700);
     return;
   }
   if(M.tries===0&&!M.riddle)st.q++;
-  if(v===ans(q)){
+  if(right){
     if(M.tries===0){M.pts+=1;M.first++;if(!M.riddle)st.first++;M.streak++;M.best=Math.max(M.best,M.streak);M.marks[M.i]='ok';if(q.review)removeError(q)}
     else{M.pts+=.5;M.streak=0;M.marks[M.i]='half'}
     M.phase='good';
@@ -57,15 +66,17 @@ function submit(){
     M.msgCls='good';sfx.good();save();render();
     const m=M;setTimeout(()=>{if(M===m)nextQ()},M.tries?1100:900);
   }else{
-    M.tries++;M.streak=0;if(!M.riddle)addError(q);sfx.bad();
-    if(M.tries===1){M.phase='ask';M.aid='hint';M.msg=M.riddle?'Presque ! Regarde l\'astuce et réessaie.':'Presque ! Regarde l\'indice et réessaie.';M.msgCls='bad';M.wrong=M.input;M.input=''}
-    else{M.phase='solution';M.aid='solution';M.marks[M.i]='miss';M.msg='Pas grave, voici comment on fait.';M.msgCls='bad';M.wrong=M.input}
+    M.tries++;M.streak=0;if(!M.riddle&&!q.clock)addError(q);sfx.bad();
+    M.wrong=givenText(q);
+    if(q.clock)M.ring=true;
+    if(M.tries===1){M.phase='ask';M.aid='hint';M.msg=M.riddle&&!q.clock?'Presque ! Regarde l\'astuce et réessaie.':'Presque ! Regarde l\'indice et réessaie.';M.msgCls='bad';if(!M.riddle||!q.clock)Object.assign(M,{input:'',hh:'',mm:'',slot:'h'})}
+    else{M.phase='solution';M.aid='solution';M.marks[M.i]='miss';M.msg='Pas grave, voici comment on fait.';M.msgCls='bad';if(q.clock&&M.riddle)M.set={h:q.h,m:q.m}}
     save();render();
   }
 }
 function nextQ(){
   if(!M||screen!=='game')return;
-  M.i++;M.tries=0;M.input='';M.phase='ask';M.aid=M.qs[M.i]&&M.qs[M.i].review?'hint':false;M.msg='';M.msgCls='';M.wrong='';M.tick=performance.now();
+  M.i++;M.tries=0;Object.assign(M,freshAnswer());M.phase='ask';M.aid=M.qs[M.i]&&M.qs[M.i].review?'hint':false;M.msg='';M.msgCls='';M.wrong='';M.tick=performance.now();
   if(M.i>=M.qs.length)(M.timed?finishTimed:M.riddle?finishRiddle:finish)();else render();
 }
 function finish(){
