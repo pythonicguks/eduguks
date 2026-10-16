@@ -14,5 +14,7 @@ jobs:
           node-version: 22
       - name: Logique des questions
         run: node tests/logic.test.js
+      - name: Joueurs et sauvegarde
+        run: node tests/players.test.js
       - name: Numéros de version à jour dans index.html
         run: python3 tools/build.py --check

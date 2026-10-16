@@ -13,6 +13,7 @@ Ouvrir `index.html` dans un navigateur (tablette, ordinateur ou téléphone). Ri
 - Mode énigme par planète (ouvert dès 1 étoile) : trouver le nombre caché (34 + ? = 52), avec une astuce qui montre le calcul inverse. 8 points sur 10 font gagner un compagnon Pokémon, affiché sur la carte et à choisir dans « Mes compagnons ».
 - Monde « Horloges » (onglet sur la carte) : 5 planètes pour lire l'heure sur une horloge à aiguilles : heures pile, et demie, quarts d'heure, de 5 en 5 minutes, puis matin ou après-midi (15 h 20). Aides « Minutes » (0, 5, 10… autour du cadran) et « Indice » (petite aiguille = heures, grande = minutes). Le chrono existe aussi ; l'énigme consiste à régler les aiguilles. Chaque planète a son alien, sa fusée et son compagnon.
 - Monde « Marché » : 6 planètes sur la monnaie, jusqu'à 100 € : compter des pièces, puis des billets, payer le prix exact en touchant l'argent du porte-monnaie, payer avec le moins de pièces et billets possible, rendre la monnaie (en comptant à partir du prix), et une planète bonus pour les centimes. Aides « Ranger », « Compter pour moi » et « Indice ». L'énigme : payer avec un porte-monnaie limité.
+- Plusieurs joueurs sur le même appareil, chacun avec sa progression : toucher le prénom en haut de la carte.
 - Album d'aliens à collectionner, série de jours d'entraînement, espace parents avec le taux de réussite par compétence.
 
 ## Organisation du code
@@ -53,13 +54,14 @@ src/
       money.js             monnaie : vérification, explications, énigmes du porte-monnaie
     ui/
       render.js            affichage de l'écran courant
-      home.js, game.js, results.js, collections.js, parents.js   un fichier par écran
+      home.js, game.js, results.js, collections.js, parents.js, players.js   un fichier par écran
       game-clock.js        écran de jeu des horloges
       game-money.js        écran de jeu du Marché
       effects.js           confettis, ciel étoilé
     main.js                démarrage et interactions
 tools/build.py             assemble tout en un seul fichier
 tests/logic.test.js        vérifie la logique des questions
+tests/players.test.js      vérifie les joueurs et la sauvegarde
 .github/workflows/tests.yml  lance les tests sur GitHub
 ```
 
@@ -69,6 +71,7 @@ tests/logic.test.js        vérifie la logique des questions
 
 ```
 node tests/logic.test.js     # vérifie 20 000 questions par planète
+node tests/players.test.js   # vérifie les joueurs et la sauvegarde
 python3 tools/build.py       # met à jour les numéros de version et crée dist/fusee-des-nombres.html
 ```
 

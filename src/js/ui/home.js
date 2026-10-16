@@ -20,7 +20,7 @@ function viewBuddy(){
 
 function viewHome(){
   const s=suggested(),L=LEVELS[s],streak=currentStreak();
-  let h=`<div class="bar"><div class="grow"></div>
+  let h=`<div class="bar homebar"><button class="chip playerchip" data-nav="players" aria-label="Joueur : ${esc(playerName(P.list.find(p=>p.id===P.current)||{}))}. Changer de joueur">${PERSON}${esc(playerName(P.list.find(p=>p.id===P.current)||{}))}</button><div class="grow"></div>
     <span class="chip" title="Étoiles gagnées"><span class="s">★</span>${totalStars()} / ${LEVELS.length*3}</span>
     <span class="chip" title="Jours d'entraînement d'affilée"><span class="f">▲</span>${streak} jour${streak>1?'s':''}</span></div>
   <div class="hero">${myShip()}<div><h1>Fusée des <span>Nombres</span></h1>
