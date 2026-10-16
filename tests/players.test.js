@@ -37,9 +37,15 @@ check(g.S.name === "Emma" && g.S.levels.add2.stars === 3, "le dernier joueur est
 g.switchPlayer(leo);
 check(g.S.name === "Léo" && g.S.levels.tens.stars === 2 && !g.S.levels.add2, "progressions séparées");
 
-// 3. prénom magique : toutes les planètes et tous les défis ouverts, tous les compagnons, toutes les fusées dorées
+// 3. prénom magique : toutes les planètes et tous les défis ouverts, tous les aliens, compagnons et fusées dorées
+const all = (api) => api.S.magic && api.LEVELS.every((l, i) => api.unlocked(i) && api.chronoOpen(l.id) && api.S.pals[l.id] && api.S.rockets[l.id] === "gold" && api.S.stickers[l.id] === "gold");
 g.addPlayer("gvdm");
-check(g.S.magic && g.LEVELS.every((l, i) => g.unlocked(i) && g.chronoOpen(l.id) && g.S.pals[l.id] && g.S.rockets[l.id] === "gold"), "GVDM débloque tout");
+check(all(g), "GVDM débloque tout");
+// un joueur GVDM créé avant cette règle (sans aliens) les reçoit à la réouverture
+const gv = g.P.current;
+storage.setItem("fusee-des-nombres-joueur-" + gv, JSON.stringify({ v: 1, name: "GVDM", magic: true, pals: {}, rockets: {}, stickers: {} }));
+g = open(storage);
+check(g.P.current === gv && all(g), "GVDM complété au chargement");
 g.switchPlayer(leo);
 check(!g.S.magic && !g.unlocked(g.LEVELS.findIndex((l) => l.id === "subSimple")), "les autres joueurs ne sont pas débloqués");
 
