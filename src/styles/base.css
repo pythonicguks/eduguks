@@ -10,6 +10,12 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
+/* appli tactile : pas de zoom au double toucher, pas de sélection de texte ni de menu à l'appui long, pas de flash gris au toucher.
+   Le zoom à deux doigts reste possible ; le champ du prénom (espace parents) reste sélectionnable. */
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+svg{-webkit-user-drag:none}
 body{background:var(--night);background-image:radial-gradient(120% 70% at 50% 0%,var(--night-2) 0%,var(--night) 70%);background-attachment:fixed;color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.45;overflow-x:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:focus-visible,input:focus-visible{outline:3px solid var(--star);outline-offset:3px}
