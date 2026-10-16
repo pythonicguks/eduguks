@@ -59,7 +59,8 @@ src/
       effects.js           confettis, ciel étoilé
     main.js                démarrage et interactions
 tools/build.py             assemble tout en un seul fichier
-tests/logic.test.js        vérifie la logique des calculs
+tests/logic.test.js        vérifie la logique des questions
+.github/workflows/tests.yml  lance les tests sur GitHub
 ```
 
 **Ajouter ou modifier une planète** : tout se passe dans `src/js/data/levels.js`, `clock-levels.js` ou `money-levels.js` (générateur de questions dans `GEN`, nom, monde, couleurs et objectifs dans `LEVELS`). Ajouter aussi sa fusée (automatique), son alien (automatique) et son compagnon dans `src/js/graphics/companions.js`, puis une règle dans `tests/logic.test.js`.
@@ -68,5 +69,7 @@ tests/logic.test.js        vérifie la logique des calculs
 
 ```
 node tests/logic.test.js     # vérifie 20 000 questions par planète
-python3 tools/build.py       # crée dist/fusee-des-nombres.html, un fichier unique autonome
+python3 tools/build.py       # met à jour les numéros de version et crée dist/fusee-des-nombres.html
 ```
+
+**Après chaque modification d'un fichier de `src/`, lancer `python3 tools/build.py`** et enregistrer `index.html` avec le reste. Chaque fichier y est chargé avec un numéro tiré de son contenu (`?v=…`) : quand il change, les téléphones le rechargent au lieu de garder l'ancien en cache. Les tests sur GitHub (`.github/workflows/tests.yml`) échouent si un numéro est périmé.
