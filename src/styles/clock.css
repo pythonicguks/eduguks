@@ -12,9 +12,9 @@
 .answer.slot{font:inherit;color:var(--star);min-width:1.5em;cursor:pointer}
 .answer.slot.active{border-style:solid;border-color:var(--star)}
 .answer.slot.empty{color:var(--line)}
-.target{font-family:var(--display);font-weight:800;font-size:clamp(28px,8vw,46px);line-height:1;color:var(--star);white-space:nowrap}
-.target.good{color:var(--mint)}
-.target.bad{color:var(--rocket)}
+.settarget{font-family:var(--display);font-weight:800;font-size:clamp(28px,8vw,46px);line-height:1;color:var(--star);white-space:nowrap}
+.settarget.good{color:var(--mint)}
+.settarget.bad{color:var(--rocket)}
 .when{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;background:var(--star);color:var(--night);font-weight:700;font-size:14px;white-space:nowrap}
 .when.am{background:var(--sky)}
 .setpad{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -23,7 +23,7 @@
 .key:disabled{opacity:.4}
 
 /* onglets des mondes sur la carte */
-.worlds{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:18px;background:var(--panel)}
+.worlds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:5px;border-radius:18px;background:var(--panel)}
 .worlds button{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:14px;font-family:var(--display);font-weight:800;font-size:19px;color:var(--ink-soft)}
 .worlds button[aria-selected="true"]{background:var(--star);color:var(--night)}
 .worlds svg{width:22px;height:22px;flex:none}
@@ -32,4 +32,6 @@
 @media (max-width:420px){
   .side .toolbtn{font-size:13px;padding:5px 9px}
   .setpad .key{font-size:21px}
+  .worlds button{font-size:16px;gap:5px;padding:9px 4px}
+  .worlds svg{width:18px;height:18px}
 }

@@ -20,7 +20,7 @@
 .album{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:20px;background:var(--panel);text-align:center}
 .slot svg{width:100%;max-width:96px;aspect-ratio:1}
-.slot .n{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1;overflow-wrap:anywhere}
+.slot .n{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.1;overflow-wrap:break-word;hyphens:auto}
 .slot.empty svg{opacity:.25;filter:grayscale(1)}
 .slot.gold{box-shadow:inset 0 0 0 3px var(--star)}
 .slot.on{box-shadow:inset 0 0 0 3px var(--mint)}
@@ -62,3 +62,7 @@ td.num{text-align:right;white-space:nowrap}
 .tips{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;font-size:16px}
 .danger{color:var(--rocket);border:2px solid var(--rocket);padding:8px 14px;border-radius:12px;font-weight:700}
 .danger.solid{background:var(--rocket);color:var(--night)}
+
+@media (max-width:420px){
+  .slot .n{font-size:15px}
+}

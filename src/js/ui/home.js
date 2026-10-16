@@ -8,6 +8,7 @@ function suggested(){
 }
 const WORLD_ICONS={
   calc:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M3 7h8M14 7h7M14 16h7M14 20h7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4 15l6 6M10 15l-6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>`,
+  money:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 8.5a4.5 4.5 0 1 0 0 7M6.5 11h6M6.5 13.5h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>`,
   clock:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 6.5V12l3.5 2.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>`,
 };
 const worldTabs=()=>`<div class="worlds" role="tablist" aria-label="Mondes">${WORLDS.map(w=>`<button role="tab" aria-selected="${S.world===w.id}" data-world="${w.id}">${WORLD_ICONS[w.id]}${w.name}</button>`).join('')}</div>`;

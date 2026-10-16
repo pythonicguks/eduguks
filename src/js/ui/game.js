@@ -1,5 +1,5 @@
 "use strict";
-/* Écran de jeu : barre, piste de la fusée, puis la question (calcul ici, horloge dans ui/game-clock.js) */
+/* Écran de jeu : barre, piste de la fusée, puis la question (calcul ici, horloge dans ui/game-clock.js, argent dans ui/game-money.js) */
 
 const SOUND_ON='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
 const SOUND_OFF='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -8,7 +8,7 @@ function viewGame(){
   const L=M.lv==='review'?{name:'Réparation',c1:'#cdeeff',c2:'#3b7fd1'}:LEVELS.find(l=>l.id===M.lv);
   const q=M.qs[M.i];
   const N=M.qs.length;
-  return gameHead(L,N)+(q.clock?clockBody(q,L,N):calcBody(q,L,N));
+  return gameHead(L,N)+(q.clock?clockBody(q,L,N):q.money?moneyBody(q,L,N):calcBody(q,L,N));
 }
 
 function gameHead(L,N){
@@ -26,7 +26,9 @@ function keypad(){
   [1,2,3,4,5,6,7,8,9].forEach(n=>h+=`<button class="key" data-key="${n}">${n}</button>`);
   return h+`<button class="key del" data-key="del" aria-label="Effacer">⌫</button><button class="key" data-key="0">0</button><button class="key ok" data-key="ok" aria-label="Valider" ${answerReady()&&M.phase==='ask'?'':'disabled'}>✓</button></div></div>`;
 }
-const nextButton=()=>`<div class="dock"><button class="next" data-act="next">J'ai compris, ${M.qs[M.i].clock?'horloge':'calcul'} suivant${M.qs[M.i].clock?'e':''} →</button></div>`;
+const nextButton=()=>{const q=M.qs[M.i];return `<div class="dock"><button class="next" data-act="next">J'ai compris, ${q.clock?'horloge suivante':q.money?'question suivante':'calcul suivant'} →</button></div>`};
+// une case de réponse en deux parties (heures / minutes, euros / centimes), qu'on touche pour la choisir
+const slotBox=(k,v,empty,cls,label)=>`<button class="answer slot ${M.slot===k&&M.phase==='ask'?'active':''} ${v===''?'empty':''} ${cls}" data-slot="${k}" aria-label="${label}">${v===''?empty:v}</button>`;
 
 function calcBody(q,L,N){
   const ansCls=M.phase==='good'?'good':(M.phase==='solution'||M.phase==='timedbad'||(M.msgCls==='bad'&&!M.input))?'bad':'';

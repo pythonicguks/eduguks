@@ -7,17 +7,18 @@ function press(k){
   if(M.phase!=='ask')return;
   if(k==='ok'){submit();return}
   const q=M.qs[M.i];
-  if(q.clock)typeTime(q,k);
+  if(q.clock||(q.money&&q.cents))typeTime(q,k);
+  else if(q.money&&q.kind==='pay')return;
   else if(k==='del')M.input=M.input.slice(0,-1);
   else if(M.input.length<2)M.input=(M.input==='0'?'':M.input)+k;
   if(M.msgCls==='bad'&&(M.input||M.hh))M.msg='';
   sfx.key();render();
 }
 
-/* saisie d'une heure : les chiffres vont dans les heures, puis passent tout seuls aux minutes
-   dès que les heures sont complètes (« 3 » puis « 25 » donne 3 h 25) */
+/* saisie en deux parties (heures et minutes, ou euros et centimes) : les chiffres vont dans la première case,
+   puis passent tout seuls à la seconde dès que la première est complète (« 3 » puis « 25 » donne 3 h 25) */
 function typeTime(q,k){
-  const max=clockMaxHour(q);
+  const max=q.clock?clockMaxHour(q):9;
   if(k==='del'){
     if(M.slot==='m'&&M.mm)M.mm=M.mm.slice(0,-1);
     else{M.slot='h';M.hh=M.hh.slice(0,-1)}
@@ -28,14 +29,20 @@ function typeTime(q,k){
     if(M.hh.length<2&&+(M.hh+k)<=max){M.hh+=k;if(M.hh.length===2||+M.hh*10>max)M.slot='m';return}
     M.slot='m';
   }
-  if(M.mm.length<2&&+(M.mm+k)<=59)M.mm+=k;
+  if(M.mm.length<2&&+(M.mm+k)<=(q.clock?59:99))M.mm+=k;
 }
+
+// on vient de poser ou reprendre de l'argent sur le comptoir
+function moneyTouched(){if(M.msgCls==='bad')M.msg='';sfx.key();render()}
 
 app.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.key){press(b.dataset.key);return}
   if(b.dataset.slot){if(M&&M.phase==='ask'){M.slot=b.dataset.slot;render()}return}
   if(b.dataset.adj){if(M&&M.phase==='ask'){M.set=clockAdjust(M.set,+b.dataset.adj);if(M.msgCls==='bad')M.msg='';sfx.key();render()}return}
+  if(b.dataset.pay){if(M&&M.phase==='ask'&&M.counter.length<20){M.counter.push({v:+b.dataset.pay,w:-1});moneyTouched()}return}
+  if(b.dataset.pick){const w=+b.dataset.pick;if(M&&M.phase==='ask'&&!M.counter.some(c=>c.w===w)){M.counter.push({v:M.qs[M.i].wallet[w],w});moneyTouched()}return}
+  if(b.dataset.unpay){if(M&&M.phase==='ask'){M.counter.splice(+b.dataset.unpay,1);moneyTouched()}return}
   if(b.dataset.world){S.world=b.dataset.world;save();render();return}
   if(b.dataset.go){startMission(b.dataset.go);window.scrollTo(0,0);return}
   if(b.dataset.chrono){startMission(b.dataset.chrono,'timed');window.scrollTo(0,0);return}
@@ -48,6 +55,9 @@ app.addEventListener('click',e=>{
   else if(a==='blocks'){M.aid=M.aid==='blocks'?false:'blocks';render()}
   else if(a==='cols'){M.aid=M.aid==='hint'?false:'hint';render()}
   else if(a==='ring'){M.ring=!M.ring;render()}
+  else if(a==='tally'){M.tally=!M.tally;render()}
+  else if(a==='sort'){M.sorted=!M.sorted;render()}
+  else if(a==='clear'){if(M.phase==='ask'){M.counter=[];moneyTouched()}}
   else if(a==='next')nextQ();
   else if(a==='savename'){S.name=(document.getElementById('kidname').value||'').trim().slice(0,20);save();b.textContent='Enregistré ✓'}
   else if(a==='reset'){confirmReset=true;render()}
@@ -59,7 +69,7 @@ document.addEventListener('contextmenu',e=>{if(e.target.closest('button,svg'))e.
 document.addEventListener('keydown',e=>{
   if(screen!=='game'||e.target.tagName==='INPUT')return;
   if(/^[0-9]$/.test(e.key))press(e.key);
-  else if((e.key==='h'||e.key===':')&&M&&M.qs[M.i].clock&&M.phase==='ask'){M.slot='m';render()}
+  else if(['h',':',',','.'].includes(e.key)&&M&&(M.qs[M.i].clock||M.qs[M.i].cents)&&M.phase==='ask'){M.slot='m';render()}
   else if(e.key==='Backspace'){e.preventDefault();press('del')}
   else if(e.key==='Enter'){e.preventDefault();press('ok')}
 });
