@@ -43,13 +43,15 @@ app.addEventListener('click',e=>{
   if(b.dataset.pay){if(M&&M.phase==='ask'&&M.counter.length<20){M.counter.push({v:+b.dataset.pay,w:-1});moneyTouched()}return}
   if(b.dataset.pick){const w=+b.dataset.pick;if(M&&M.phase==='ask'&&!M.counter.some(c=>c.w===w)){M.counter.push({v:M.qs[M.i].wallet[w],w});moneyTouched()}return}
   if(b.dataset.unpay){if(M&&M.phase==='ask'){M.counter.splice(+b.dataset.unpay,1);moneyTouched()}return}
+  if(b.dataset.player){switchPlayer(b.dataset.player);M=null;confirmDelete='';screen='home';render();window.scrollTo(0,0);return}
+  if(b.dataset.delplayer){confirmDelete=b.dataset.delplayer;render();return}
   if(b.dataset.world){S.world=b.dataset.world;save();render();return}
   if(b.dataset.go){startMission(b.dataset.go);window.scrollTo(0,0);return}
   if(b.dataset.chrono){startMission(b.dataset.chrono,'timed');window.scrollTo(0,0);return}
   if(b.dataset.riddle){startMission(b.dataset.riddle,'riddle');window.scrollTo(0,0);return}
   if(b.dataset.pal){S.pal=b.dataset.pal;save();render();return}
   if(b.dataset.ship){S.ship=b.dataset.ship;save();render();return}
-  if(b.dataset.nav){screen=b.dataset.nav;M=screen==='home'?null:M;confirmReset=false;render();window.scrollTo(0,0);return}
+  if(b.dataset.nav){screen=b.dataset.nav;M=screen==='home'?null:M;confirmReset=false;confirmDelete='';render();window.scrollTo(0,0);return}
   const a=b.dataset.act;
   if(a==='sound'){S.sound=!S.sound;save();render()}
   else if(a==='blocks'){M.aid=M.aid==='blocks'?false:'blocks';render()}
@@ -59,15 +61,19 @@ app.addEventListener('click',e=>{
   else if(a==='sort'){M.sorted=!M.sorted;render()}
   else if(a==='clear'){if(M.phase==='ask'){M.counter=[];moneyTouched()}}
   else if(a==='next')nextQ();
-  else if(a==='savename'){S.name=(document.getElementById('kidname').value||'').trim().slice(0,20);save();b.textContent='Enregistré ✓'}
+  else if(a==='savename'){setPlayerName(document.getElementById('kidname').value);render();document.querySelector('[data-act="savename"]').textContent='Enregistré ✓'}
+  else if(a==='addplayer'){addPlayer(document.getElementById('newplayer').value);M=null;screen='home';render();window.scrollTo(0,0)}
+  else if(a==='del-yes'){deletePlayer(confirmDelete);confirmDelete='';render()}
+  else if(a==='del-no'){confirmDelete='';render()}
   else if(a==='reset'){confirmReset=true;render()}
   else if(a==='reset-no'){confirmReset=false;render()}
-  else if(a==='reset-yes'){const keep=S.sound;S=fresh();S.sound=keep;save();confirmReset=false;screen='home';render()}
+  else if(a==='reset-yes'){const keep={sound:S.sound,name:S.name};S=Object.assign(fresh(),keep);applyMagic();save();confirmReset=false;screen='home';render()}
 });
 // appui long sur un bouton ou un dessin : pas de menu du navigateur (copier, enregistrer l'image…)
 document.addEventListener('contextmenu',e=>{if(e.target.closest('button,svg'))e.preventDefault()});
 document.addEventListener('keydown',e=>{
-  if(screen!=='game'||e.target.tagName==='INPUT')return;
+  if(e.target.tagName==='INPUT'){if(e.key==='Enter'&&e.target.id==='newplayer'){e.preventDefault();app.querySelector('[data-act="addplayer"]').click()}return}
+  if(screen!=='game')return;
   if(/^[0-9]$/.test(e.key))press(e.key);
   else if(['h',':',',','.'].includes(e.key)&&M&&(M.qs[M.i].clock||M.qs[M.i].cents)&&M.phase==='ask'){M.slot='m';render()}
   else if(e.key==='Backspace'){e.preventDefault();press('del')}

@@ -4,7 +4,7 @@
 let confirmReset=false;
 function viewParents(){
   let h=`<div class="bar"><button class="iconbtn" data-nav="home">← Carte</button></div><div class="parents"><h2>Espace parents</h2>
-  <div class="box"><h3>Prénom de l'astronaute</h3><div class="field"><input id="kidname" maxlength="20" placeholder="ex. Léo" value="${esc(S.name)}" aria-label="Prénom"><button class="iconbtn" data-act="savename">Enregistrer</button></div></div>
+  <div class="box"><h3>Prénom de l'astronaute</h3><p class="note" style="margin-bottom:10px">Pour plusieurs enfants, touchez le prénom en haut de la carte : chacun peut avoir sa propre progression.</p><div class="field"><input id="kidname" maxlength="20" placeholder="ex. Léo" value="${esc(S.name)}" aria-label="Prénom"><button class="iconbtn" data-act="savename">Enregistrer</button></div></div>
   <div class="box"><h3>Progression</h3><div class="tbl"><table><thead><tr><th>Planète</th><th>Compétence</th><th class="num">Missions</th><th class="num">1er essai</th><th>Étoiles</th><th class="num">Chrono</th><th class="num">Énigme</th></tr></thead><tbody>`;
   LEVELS.forEach(l=>{const st=S.stats[l.id]||{q:0,first:0,missions:0},p=st.q?Math.round(st.first/st.q*100):null;
     h+=`<tr><td>${esc(l.name)}</td><td>${esc(l.skill)}<br><span class="legend">${l.ex}</span></td><td class="num">${st.missions}</td><td class="num">${p===null?'–':`<span class="meter"><i style="width:${p}%"></i></span>${p} %`}</td><td>${starsTxt(starsOf(l.id))}</td><td class="num">${S.times[l.id]?fmt(S.times[l.id]):'–'}<br><span class="legend">${l.silver} / ${l.gold} s</span></td><td class="num">${S.riddles[l.id]?fmtPts(S.riddles[l.id].best)+'/10':'–'}${S.pals[l.id]?'<br><span class="legend">compagnon ✓</span>':''}</td></tr>`});
@@ -17,7 +17,8 @@ function viewParents(){
     <li>Pour les soustractions avec retenue, le jeu montre la méthode par <b>échange</b> (« je casse une dizaine en 10 unités »). Si l'école utilise une autre méthode (compensation), privilégiez celle de l'enseignant.</li>
     <li>Le mode chrono s'ouvre dès 1 étoile. Il travaille la rapidité une fois la méthode comprise ; chaque erreur ajoute 5 secondes, donc la justesse reste la priorité. Si vous sentez de la pression, revenez au mode normal.</li>
     <li>Le mode énigme (« 34 + ? = 52 ») s'ouvre lui aussi dès 1 étoile. Il fait travailler le lien entre addition et soustraction : l'astuce montre le calcul inverse à poser. Les erreurs de ce mode ne vont pas dans les calculs à retravailler.</li>
+    <li>Plusieurs enfants peuvent jouer sur le même appareil : touchez le prénom en haut de la carte pour changer de joueur ou en ajouter un.</li>
     <li>La progression est enregistrée dans ce navigateur, sur cet appareil.</li></ul></div>
-  <div class="box"><h3>Recommencer à zéro</h3>${confirmReset?`<p class="note">Toute la progression, les étoiles, les aliens, les temps, les fusées et les compagnons seront effacés.</p><div class="field" style="margin-top:10px"><button class="danger solid" data-act="reset-yes">Oui, tout effacer</button><button class="iconbtn" data-act="reset-no">Annuler</button></div>`:`<button class="danger" data-act="reset">Effacer la progression</button>`}</div></div>`;
+  <div class="box"><h3>Recommencer à zéro</h3>${confirmReset?`<p class="note">Toute la progression de ${esc(S.name||'ce joueur')} (étoiles, aliens, temps, fusées et compagnons) sera effacée. Les autres joueurs ne sont pas touchés.</p><div class="field" style="margin-top:10px"><button class="danger solid" data-act="reset-yes">Oui, tout effacer</button><button class="iconbtn" data-act="reset-no">Annuler</button></div>`:`<button class="danger" data-act="reset">Effacer la progression</button>`}</div></div>`;
   return h;
 }
