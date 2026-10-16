@@ -6,7 +6,7 @@ const KEY='fusee-des-nombres-v1';                 // ancienne sauvegarde unique 
 const PLAYERS_KEY='fusee-des-nombres-joueurs';
 const playerKey=id=>`fusee-des-nombres-joueur-${id}`;
 const MAX_PLAYERS=8;
-const MAGIC_NAME='GVDM';                          // ce prénom ouvre toutes les planètes, avec tous les compagnons et les fusées
+const MAGIC_NAME='GVDM';                          // ce prénom ouvre toutes les planètes, avec tous les aliens, compagnons et fusées
 
 const fresh=()=>({v:1,name:'',sound:true,levels:{},stats:{},errors:[],stickers:{},lastDay:'',dayStreak:0,times:{},rockets:{},ship:'base',riddles:{},pals:{},pal:'',world:'calc',magic:false});
 let S=fresh();
@@ -32,11 +32,11 @@ function loadPlayers(){
     if(old&&old.v===1)store.set(playerKey(id),old);
     savePlayers();
   }
-  S=loadState(P.current);
+  S=loadState(P.current);applyMagic();
 }
 function switchPlayer(id){
   if(!P.list.some(p=>p.id===id))return;
-  save();P.current=id;savePlayers();S=loadState(id);
+  save();P.current=id;savePlayers();S=loadState(id);applyMagic();
 }
 function addPlayer(name){
   if(P.list.length>=MAX_PLAYERS)return;
@@ -55,11 +55,12 @@ function setPlayerName(name){
   const p=P.list.find(p=>p.id===P.current);if(p)p.name=S.name;
   applyMagic();save();savePlayers();
 }
-// le prénom magique : toutes les planètes ouvertes, tous les compagnons, toutes les fusées dorées
+// le prénom magique : toutes les planètes ouvertes, tous les aliens dorés, tous les compagnons, toutes les fusées dorées.
+// Appliqué aussi à chaque chargement, pour que les planètes ajoutées plus tard soient débloquées.
 function applyMagic(){
   if(S.name.toUpperCase()!==MAGIC_NAME)return;
   S.magic=true;
-  LEVELS.forEach(l=>{S.pals[l.id]=true;S.rockets[l.id]='gold'});
+  LEVELS.forEach(l=>{S.pals[l.id]=true;S.rockets[l.id]='gold';S.stickers[l.id]='gold'});
   if(!S.pal)S.pal=LEVELS[0].id;
 }
 // résumé d'un joueur pour l'écran « Qui joue ? »
