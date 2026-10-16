@@ -2,7 +2,7 @@
 
 ## Fusée des Nombres
 
-Jeu de mathématiques pour le CE1 : additions et soustractions à deux chiffres, et lecture de l'heure.
+Jeu de mathématiques pour le CE1 : additions et soustractions à deux chiffres, lecture de l'heure et monnaie.
 Ouvrir `index.html` dans un navigateur (tablette, ordinateur ou téléphone). Rien à installer.
 
 - 9 planètes, une par compétence : dizaines rondes, ajout d'unités, additions sans puis avec retenue, soustractions sans puis avec échange, et un grand défi final.
@@ -12,6 +12,7 @@ Ouvrir `index.html` dans un navigateur (tablette, ordinateur ou téléphone). Ri
 - Mode chrono par planète (ouvert dès 1 étoile) : 10 calculs, +5 s par erreur. Le meilleur temps est enregistré ; battre l'objectif argent puis or fait gagner la fusée de la planète, à choisir dans le hangar.
 - Mode énigme par planète (ouvert dès 1 étoile) : trouver le nombre caché (34 + ? = 52), avec une astuce qui montre le calcul inverse. 8 points sur 10 font gagner un compagnon Pokémon, affiché sur la carte et à choisir dans « Mes compagnons ».
 - Monde « Horloges » (onglet sur la carte) : 5 planètes pour lire l'heure sur une horloge à aiguilles : heures pile, et demie, quarts d'heure, de 5 en 5 minutes, puis matin ou après-midi (15 h 20). Aides « Minutes » (0, 5, 10… autour du cadran) et « Indice » (petite aiguille = heures, grande = minutes). Le chrono existe aussi ; l'énigme consiste à régler les aiguilles. Chaque planète a son alien, sa fusée et son compagnon.
+- Monde « Marché » : 6 planètes sur la monnaie, jusqu'à 100 € : compter des pièces, puis des billets, payer le prix exact en touchant l'argent du porte-monnaie, payer avec le moins de pièces et billets possible, rendre la monnaie (en comptant à partir du prix), et une planète bonus pour les centimes. Aides « Ranger », « Compter pour moi » et « Indice ». L'énigme : payer avec un porte-monnaie limité.
 - Album d'aliens à collectionner, série de jours d'entraînement, espace parents avec le taux de réussite par compétence.
 
 ## Organisation du code
@@ -27,6 +28,7 @@ src/
     game.css               écran de jeu : piste, calcul, aides, clavier
     screens.css            résultats, album, hangar, compagnons, parents
     clock.css              horloges et onglets des mondes
+    money.css              pièces, billets, comptoir et porte-monnaie
   js/
     core/
       utils.js             hasard, calculs, formats, échappement HTML
@@ -35,6 +37,7 @@ src/
     data/
       levels.js            les mondes et les 9 planètes de calcul : générateurs, objectifs
       clock-levels.js      les 5 planètes des horloges
+      money-levels.js      les 6 planètes du Marché
       messages.js          textes d'encouragement
     graphics/
       icons.js             cadenas, étoiles
@@ -43,20 +46,23 @@ src/
       companions.js        compagnons
       aids.js              cubes et calcul posé (aides pédagogiques)
       clock.js             horloge à aiguilles
+      money.js             pièces et billets
     game/
       mission.js           déroulement d'une mission (normale, chrono, énigme, réparation)
       clock.js             horloges : vérification des réponses, explications
+      money.js             monnaie : vérification, explications, énigmes du porte-monnaie
     ui/
       render.js            affichage de l'écran courant
       home.js, game.js, results.js, collections.js, parents.js   un fichier par écran
       game-clock.js        écran de jeu des horloges
+      game-money.js        écran de jeu du Marché
       effects.js           confettis, ciel étoilé
     main.js                démarrage et interactions
 tools/build.py             assemble tout en un seul fichier
 tests/logic.test.js        vérifie la logique des calculs
 ```
 
-**Ajouter ou modifier une planète** : tout se passe dans `src/js/data/levels.js` ou `src/js/data/clock-levels.js` (générateur de questions dans `GEN`, nom, monde, couleurs et objectifs dans `LEVELS`). Ajouter aussi sa fusée (automatique), son alien (automatique) et son compagnon dans `src/js/graphics/companions.js`, puis une règle dans `tests/logic.test.js`.
+**Ajouter ou modifier une planète** : tout se passe dans `src/js/data/levels.js`, `clock-levels.js` ou `money-levels.js` (générateur de questions dans `GEN`, nom, monde, couleurs et objectifs dans `LEVELS`). Ajouter aussi sa fusée (automatique), son alien (automatique) et son compagnon dans `src/js/graphics/companions.js`, puis une règle dans `tests/logic.test.js`.
 
 ## Commandes
 

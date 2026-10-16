@@ -5,7 +5,7 @@ const path = require("path");
 const vm = require("vm");
 
 const ROOT = path.join(__dirname, "..");
-const files = ["core/utils.js", "data/levels.js", "data/clock-levels.js", "core/storage.js", "graphics/aids.js", "graphics/clock.js", "game/clock.js", "game/mission.js"];
+const files = ["core/utils.js", "data/levels.js", "data/clock-levels.js", "data/money-levels.js", "core/storage.js", "graphics/aids.js", "graphics/clock.js", "game/clock.js", "game/money.js", "game/mission.js"];
 const ctx = vm.createContext({ console });
 vm.runInContext(files.map((f) => fs.readFileSync(path.join(ROOT, "src/js", f), "utf8")).join("\n"), ctx);
 
@@ -33,9 +33,20 @@ const clockRules = {
   clockFive: (q) => q.m % 5 === 0 && q.pm === null,
   clockDay: (q) => q.m % 5 === 0 && (q.pm === true ? q.h + 12 <= 19 : q.h >= 6 && q.h <= 11),
 };
-vm.runInContext("this.T={GEN,LEVELS,res,ans,inverse,column,clockReadOk,clockSetOk,clockAdjust,clockSteps,clockAnswer,clockHour,unlocked}", ctx);
-const { GEN, LEVELS, res, ans, inverse, column, clockReadOk, clockSetOk, clockAdjust, clockSteps, clockAnswer, clockHour, unlocked } = ctx.T;
-check(LEVELS.every((l) => rules[l.id] || clockRules[l.id]), "chaque planète a une règle de test");
+vm.runInContext("this.T={GEN,LEVELS,res,ans,inverse,column,clockReadOk,clockSetOk,clockAdjust,clockSteps,clockAnswer,clockHour,unlocked,moneyValue,moneyTypedOk,moneyPayOk,moneySolution,moneyPuzzle,moneySteps,greedy,fmtEur,DENOMS}", ctx);
+const { GEN, LEVELS, res, ans, inverse, column, clockReadOk, clockSetOk, clockAdjust, clockSteps, clockAnswer, clockHour, unlocked,
+  moneyValue, moneyTypedOk, moneyPayOk, moneySolution, moneyPuzzle, moneySteps, greedy, fmtEur, DENOMS } = ctx.T;
+// Marché : chaque planète produit le bon type de question, avec des sommes jusqu'à 100 €.
+const sum = (a) => a.reduce((s, x) => s + x, 0);
+const moneyRules = {
+  moneyCoins: (q) => q.kind === "count" && q.items.every((v) => v === 100 || v === 200),
+  moneyBills: (q) => q.kind === "count" && q.items.some((v) => v >= 500) && sum(q.items) <= 9900,
+  moneyPay: (q) => q.kind === "pay" && !q.few && q.price % 100 === 0 && q.price >= 1100 && q.price <= 9900,
+  moneyFew: (q) => q.kind === "pay" && q.few && q.price % 100 === 0 && q.price <= 9900,
+  moneyChange: (q) => q.kind === "change" && q.paid > q.price && sum(q.paidItems) === q.paid && q.paid <= 10000,
+  moneyCents: (q) => q.kind === "count" && q.cents && sum(q.items) >= 100 && sum(q.items) < 1000 && sum(q.items) % 100 !== 0,
+};
+check(LEVELS.every((l) => rules[l.id] || clockRules[l.id] || moneyRules[l.id]), "chaque planète a une règle de test");
 check(unlocked(LEVELS.findIndex((l) => l.id === "clockHours")), "la première horloge est ouverte dès le départ");
 
 for (const id of Object.keys(rules)) {
@@ -79,7 +90,46 @@ for (const id of Object.keys(clockRules)) {
     check(clockSteps(q, true, false).some((s) => s.includes(`<b>${clockAnswer(q)}</b>`)), `${id} : correction sans l'heure pour ${clockAnswer(q)}`);
   }
 }
+// le moins de pièces possible : le rendu « glouton » est optimal pour les euros (vérifié par programmation dynamique)
+const best = [0];
+for (let c = 10; c <= 10000; c += 10) best[c / 10] = Math.min(...DENOMS.filter((d) => d <= c).map((d) => best[(c - d) / 10] + 1));
+for (let c = 10; c <= 10000; c += 10) check(greedy(c).length === best[c / 10] && sum(greedy(c)) === c, `rendu glouton non optimal pour ${c} c`);
+
+for (const id of Object.keys(moneyRules)) {
+  const L = LEVELS.find((l) => l.id === id);
+  for (let i = 0; i < RUNS; i++) {
+    const q = GEN[id]();
+    q.lv = id;
+    check(moneyRules[id](q), `${id} : ${JSON.stringify(q)} ne respecte pas la compétence`);
+    const v = moneyValue(q);
+    if (q.kind === "pay") {
+      const sol = moneySolution(q);
+      check(moneyPayOk(q, sol), `${id} : la solution ne paie pas ${fmtEur(q.price)}`);
+      check(sol.every((c) => L.denoms.includes(c.v)), `${id} : la solution utilise de l'argent absent du porte-monnaie`);
+      // payer avec trop de pièces : accepté pour « prix exact », refusé pour « le moins possible »
+      const split = sol.findIndex((c) => c.v === 200);
+      if (split >= 0) {
+        const more = [...sol.slice(0, split), { v: 100, w: -1 }, { v: 100, w: -1 }, ...sol.slice(split + 1)];
+        check(moneyPayOk(q, more) === !q.few, `${id} : paiement en trop de pièces mal jugé pour ${fmtEur(q.price)}`);
+      }
+      check(!moneyPayOk(q, [...sol, { v: 100, w: -1 }]), `${id} : un paiement trop grand est accepté`);
+    } else if (q.cents) {
+      check(moneyTypedOk(q, "", String(Math.floor(v / 100)), String(v % 100)), `${id} : ${fmtEur(v)} refusé`);
+      check(!moneyTypedOk(q, "", String(Math.floor(v / 100)), String((v % 100) + 10)), `${id} : centimes faux acceptés`);
+    } else {
+      check(moneyTypedOk(q, String(v / 100), "", ""), `${id} : ${fmtEur(v)} refusé`);
+      check(!moneyTypedOk(q, String(v / 100 + 1), "", ""), `${id} : réponse fausse acceptée`);
+    }
+    check(moneySteps(q, true).some((s) => s.includes(`<b>${fmtEur(v)}</b>`)), `${id} : correction sans la somme ${fmtEur(v)}`);
+    // énigme : le porte-monnaie limité permet toujours de payer, sans utiliser deux fois la même pièce
+    if (i < 2000) {
+      const p = moneyPuzzle(L);
+      const s = moneySolution(p);
+      check(moneyPayOk(p, s) && new Set(s.map((c) => c.w)).size === s.length && p.price <= 9900, `${id} : énigme impossible ${JSON.stringify(p)}`);
+    }
+  }
+}
 check(clockAdjust({ h: 12, m: 0 }, -5).h === 11 && clockAdjust({ h: 11, m: 55 }, 5).h === 12, "les aiguilles tournent dans les deux sens autour de midi");
 
 if (failures) { console.error(`${failures} échec(s)`); process.exit(1); }
-console.log(`OK : ${Object.keys(rules).length + Object.keys(clockRules).length} planètes × ${RUNS} questions vérifiées`);
+console.log(`OK : ${Object.keys(rules).length + Object.keys(clockRules).length + Object.keys(moneyRules).length} planètes × ${RUNS} questions vérifiées`);

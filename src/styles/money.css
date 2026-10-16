@@ -1,0 +1,31 @@
+/* Monde « Marché » : pièces, billets, comptoir et porte-monnaie */
+.moneycard{gap:8px}
+.money{display:inline-block;line-height:0;padding:0}
+.money svg{display:block}
+.tray{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;min-height:56px}
+.moneyans{font-size:clamp(30px,9vw,46px);gap:.15em}
+.moneyans .ask{font-family:var(--body);font-size:18px;font-weight:700;color:var(--ink-soft);margin-right:.3em}
+.deal{text-align:center;font-size:18px;line-height:1.3}
+.deal b{font-family:var(--display);font-size:32px;color:var(--star);white-space:nowrap}
+.deal .few{font-size:15px;color:var(--ink-soft)}
+.counter{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;width:100%;min-height:70px;padding:8px;border-radius:16px;border:2px dashed var(--line)}
+.counter.good{border-style:solid;border-color:var(--mint)}
+.counter.bad{border-style:solid;border-color:var(--rocket)}
+.counter .empty-note{color:var(--ink-soft);font-size:15px;text-align:center}
+.tally{font-weight:700;color:var(--mint)}
+.wallet-title{font-size:14px;font-weight:700;color:var(--ink-soft);text-align:center;margin-bottom:6px}
+.wallet{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wallet.limited{grid-template-columns:repeat(4,1fr)}
+.wallet .key{height:auto;min-height:58px;display:flex;align-items:center;justify-content:center;padding:4px}
+.wallet .key:disabled{opacity:.2}
+.wallet-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:8px}
+.wallet-actions .key{height:52px;font-size:20px}
+
+@media (max-width:420px){
+  .wallet{gap:6px}
+  .wallet .key{min-height:48px}
+  .wallet-actions .key{height:46px;font-size:18px}
+  .deal{font-size:16px}
+  .deal b{font-size:28px}
+  .counter{min-height:56px;padding:6px}
+}

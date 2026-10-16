@@ -12,13 +12,12 @@ function clockBody(q,L,N){
     :`<span class="qcount">Horloge ${M.i+1} sur ${N} · ${setting?'règle les aiguilles':'quelle heure est-il ?'}</span>`;
   if(setting){
     h+=`<div class="clockwrap">${clockSVG(M.set.h,M.set.m,{ring:M.ring})}</div>
-      <div class="side"><span class="ask">Mets l'horloge à</span><span class="target ${cls}">${clockAnswer(q)}</span>${M.phase==='ask'?tools:''}</div>`;
+      <div class="side"><span class="ask">Mets l'horloge à</span><span class="settarget ${cls}">${clockAnswer(q)}</span>${M.phase==='ask'?tools:''}</div>`;
   }else{
     const hh=solved?String(clockHour(q)):M.hh,mm=solved?String(q.m).padStart(2,'0'):M.mm;
-    const slot=(k,v,empty)=>`<button class="answer slot ${M.slot===k&&M.phase==='ask'?'active':''} ${v===''?'empty':''} ${cls}" data-slot="${k}" aria-label="${k==='h'?'Les heures':'Les minutes'}">${v===''?empty:v}</button>`;
     const when=q.pm===null?'':`<span class="when ${q.pm?'pm':'am'}">${SUN} ${q.pm?'Après-midi':'Matin'}</span>`;
     h+=`<div class="clockwrap">${clockSVG(q.h,q.m,{ring:M.ring})}</div>
-      <div class="side">${when}<span class="ask">Il est :</span><div class="calc timeans" aria-live="polite">${slot('h',hh,'?')}<span class="op">h</span>${slot('m',mm,'??')}</div>${M.phase==='ask'&&!M.timed?tools:''}</div>`;
+      <div class="side">${when}<span class="ask">Il est :</span><div class="calc timeans" aria-live="polite">${slotBox('h',hh,'?',cls,'Les heures')}<span class="op">h</span>${slotBox('m',mm,'??',cls,'Les minutes')}</div>${M.phase==='ask'&&!M.timed?tools:''}</div>`;
   }
   h+=`<div class="msg ${M.msgCls}" role="status">${esc(M.msg)}</div></section>`;
   if(M.aid==='hint'||M.aid==='solution'){

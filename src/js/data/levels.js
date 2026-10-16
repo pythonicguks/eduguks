@@ -33,8 +33,8 @@ const LEVELS=[
   {id:'mix',      name:'Étoile Royale',skill:'Le grand défi',              ex:'tout mélangé',c1:'#fff4b8',c2:'#e0a800',silver:120,gold:80},
 ];
 const QUESTIONS=10;
-// mondes : chaque planète appartient à un monde (calculs par défaut) ; data/clock-levels.js ajoute les horloges
-const WORLDS=[{id:'calc',name:'Calculs'},{id:'clock',name:'Horloges'}];
+// mondes : chaque planète appartient à un monde (calculs par défaut) ; data/clock-levels.js et data/money-levels.js ajoutent les autres
+const WORLDS=[{id:'calc',name:'Calculs'},{id:'clock',name:'Horloges'},{id:'money',name:'Marché'}];
 const worldOf=l=>l.world||'calc';
 const REVIEW_MAX=8;
 const lvOrder=lv=>{const i=LEVELS.findIndex(l=>l.id===lv);return i<0?LEVELS.length:i};

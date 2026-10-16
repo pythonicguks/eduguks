@@ -104,5 +104,51 @@ const PALS={
   clockDay:{name:'Métamorph',cry:'Méta… morph !',art:`<path d="M14 84 Q10 62 26 56 Q22 34 42 34 Q50 24 60 34 Q80 32 76 56 Q92 64 86 84 Q50 92 14 84Z" fill="#c9a0dc"/>
     <circle cx="42" cy="54" r="2.2" fill="#2b2b2b" stroke="none"/><circle cx="58" cy="54" r="2.2" fill="#2b2b2b" stroke="none"/>
     <path d="M40 66 Q45 63 50 66 Q55 69 60 66" fill="none"/>`},
+  // monde Marché
+  moneyCoins:{name:'Miaouss',cry:'Miaouss ! Jackpot !',art:`<path d="M64 84 Q90 82 86 62 Q84 52 90 47" fill="none" stroke="#f3e2b8" stroke-width="5"/><ellipse cx="90" cy="45" rx="4" ry="5" fill="#8a5a2b"/>
+    <ellipse cx="50" cy="78" rx="15" ry="14" fill="#f3e2b8"/><ellipse cx="42" cy="91" rx="6" ry="3.5" fill="#8a5a2b"/><ellipse cx="58" cy="91" rx="6" ry="3.5" fill="#8a5a2b"/>
+    <path d="M30 38 L24 13 L44 28 Z" fill="#f3e2b8"/><path d="M31 33 L28 20 L39 28Z" fill="#8a5a2b" stroke="none"/>
+    <path d="M70 38 L76 13 L56 28 Z" fill="#f3e2b8"/><path d="M69 33 L72 20 L61 28Z" fill="#8a5a2b" stroke="none"/>
+    <ellipse cx="50" cy="46" rx="23" ry="19" fill="#f3e2b8"/>
+    <ellipse cx="50" cy="31" rx="7" ry="8" fill="#f1c232"/><ellipse cx="50" cy="31" rx="3.5" ry="4.5" fill="none" stroke="#b8901f"/>
+    <ellipse cx="41" cy="46" rx="4" ry="5" fill="#fff"/><ellipse cx="41" cy="46.5" rx="1.3" ry="3.5" fill="#2b2b2b" stroke="none"/>
+    <ellipse cx="59" cy="46" rx="4" ry="5" fill="#fff"/><ellipse cx="59" cy="46.5" rx="1.3" ry="3.5" fill="#2b2b2b" stroke="none"/>
+    <path d="M45 55 Q50 58 55 55" fill="none"/><path d="M47 55.8 L48 58.5 L49 56.4 Z" fill="#fff" stroke-width="1"/>
+    <path d="M28 50 Q16 46 10 52 M28 53 Q18 56 12 62 M72 50 Q84 46 90 52 M72 53 Q82 56 88 62" fill="none" stroke-width="1.6"/>`},
+  moneyBills:{name:'Leveinard',cry:'Leveiii !',art:`<ellipse cx="40" cy="92" rx="7" ry="3.5" fill="#f6b6c4"/><ellipse cx="60" cy="92" rx="7" ry="3.5" fill="#f6b6c4"/>
+    <path d="M22 60 Q20 24 50 22 Q80 24 78 60 Q80 92 50 92 Q20 92 22 60Z" fill="#f6b6c4"/>
+    <path d="M24 40 Q12 40 14 50 Q18 46 24 48 M76 40 Q88 40 86 50 Q82 46 76 48" fill="#f6b6c4"/>
+    <path d="M34 66 Q50 74 66 66 Q66 84 50 86 Q34 84 34 66Z" fill="#f9d4dc"/><ellipse cx="50" cy="68" rx="7" ry="9" fill="#fffdf5"/>
+    <ellipse cx="30" cy="62" rx="5" ry="4" fill="#f6b6c4"/><ellipse cx="70" cy="62" rx="5" ry="4" fill="#f6b6c4"/>
+    ${EYE(42,42,2.5,3.5,'#2b2b2b')}${EYE(58,42,2.5,3.5,'#2b2b2b')}<path d="M45 50 Q50 54 55 50" fill="none"/>`},
+  moneyPay:{name:'Rattata',cry:'Rattata !',art:`<path d="M62 84 Q88 90 90 70 Q92 56 82 58" fill="none" stroke="#a77fc6" stroke-width="4"/>
+    <ellipse cx="40" cy="91" rx="6" ry="3.5" fill="#a77fc6"/><ellipse cx="60" cy="91" rx="6" ry="3.5" fill="#a77fc6"/>
+    <ellipse cx="50" cy="76" rx="16" ry="15" fill="#a77fc6"/><ellipse cx="50" cy="80" rx="9" ry="9" fill="#f3e2c0"/>
+    <circle cx="30" cy="30" r="12" fill="#a77fc6"/><circle cx="30" cy="30" r="7" fill="#f6b6c4" stroke="none"/><circle cx="70" cy="30" r="12" fill="#a77fc6"/><circle cx="70" cy="30" r="7" fill="#f6b6c4" stroke="none"/>
+    <ellipse cx="50" cy="46" rx="21" ry="18" fill="#a77fc6"/>
+    <ellipse cx="41" cy="43" rx="5" ry="6" fill="#fff"/><circle cx="41.5" cy="44" r="3" fill="#c0392b" stroke="none"/><circle cx="42.5" cy="42.5" r="1" fill="#fff" stroke="none"/>
+    <ellipse cx="59" cy="43" rx="5" ry="6" fill="#fff"/><circle cx="58.5" cy="44" r="3" fill="#c0392b" stroke="none"/><circle cx="59.5" cy="42.5" r="1" fill="#fff" stroke="none"/>
+    <ellipse cx="50" cy="53" rx="2.5" ry="1.8" fill="#2b2b2b"/><path d="M46 56 H54 V63 H46 Z" fill="#fff"/><path d="M50 56 V63" fill="none"/>
+    <path d="M38 54 L26 52 M38 57 L27 60 M62 54 L74 52 M62 57 L73 60" fill="none" stroke-width="1.3"/>`},
+  moneyFew:{name:'Mélofée',cry:'Mélo mélo !',art:`<path d="M28 60 Q12 50 16 66 Q20 72 30 68Z" fill="#fdf0f3"/><path d="M72 60 Q88 50 84 66 Q80 72 70 68Z" fill="#fdf0f3"/>
+    <path d="M32 38 L22 12 L44 30 Z" fill="#f9c6d3"/><path d="M22 12 L25 21 L28 19 Z" fill="#6b4423"/><path d="M68 38 L78 12 L56 30 Z" fill="#f9c6d3"/><path d="M78 12 L75 21 L72 19 Z" fill="#6b4423"/>
+    <ellipse cx="40" cy="90" rx="7" ry="4" fill="#6b4423"/><ellipse cx="60" cy="90" rx="7" ry="4" fill="#6b4423"/>
+    <path d="M50 26 Q74 26 74 56 Q76 86 50 88 Q24 86 26 56 Q26 26 50 26Z" fill="#f9c6d3"/>
+    <path d="M50 27 Q44 18 50 14 Q56 14 54 20" fill="none"/>
+    <ellipse cx="28" cy="58" rx="4" ry="6" fill="#f9c6d3"/><ellipse cx="72" cy="58" rx="4" ry="6" fill="#f9c6d3"/>
+    ${EYE(42,48,3,5,'#2b2b2b')}${EYE(58,48,3,5,'#2b2b2b')}
+    <ellipse cx="36" cy="59" rx="4" ry="2.5" fill="#f08aa6" stroke="none"/><ellipse cx="64" cy="59" rx="4" ry="2.5" fill="#f08aa6" stroke="none"/><path d="M46 59 Q50 62 54 59" fill="none"/>`},
+  moneyChange:{name:'Ramoloss',cry:'Ramo… loss ?',art:`<path d="M66 82 Q92 84 88 64" fill="none" stroke="#f4a7b9" stroke-width="7"/><ellipse cx="88" cy="62" rx="5" ry="4" fill="#fffdf5"/>
+    <ellipse cx="34" cy="89" rx="5" ry="4" fill="#f4a7b9"/><ellipse cx="46" cy="90" rx="5" ry="4" fill="#f4a7b9"/><ellipse cx="56" cy="90" rx="5" ry="4" fill="#f4a7b9"/><ellipse cx="68" cy="89" rx="5" ry="4" fill="#f4a7b9"/>
+    <ellipse cx="50" cy="76" rx="22" ry="15" fill="#f4a7b9"/>
+    <ellipse cx="32" cy="30" rx="6" ry="5" fill="#f4a7b9"/><ellipse cx="68" cy="30" rx="6" ry="5" fill="#f4a7b9"/>
+    <ellipse cx="50" cy="44" rx="24" ry="20" fill="#f4a7b9"/><ellipse cx="50" cy="54" rx="15" ry="9" fill="#f9e3c6"/>
+    <ellipse cx="40" cy="40" rx="4.5" ry="5" fill="#fff"/><circle cx="40" cy="40.5" r="1.5" fill="#2b2b2b" stroke="none"/><ellipse cx="60" cy="40" rx="4.5" ry="5" fill="#fff"/><circle cx="60" cy="40.5" r="1.5" fill="#2b2b2b" stroke="none"/>
+    <path d="M42 55 Q50 60 58 55" fill="none"/>`},
+  moneyCents:{name:'Nosferapti',cry:'Nosfé ! Fiiii !',art:`<path d="M38 50 Q14 30 4 44 Q12 50 10 60 Q20 56 24 66 Q30 58 38 62 Z" fill="#9a7fd1"/><path d="M62 50 Q86 30 96 44 Q88 50 90 60 Q80 56 76 66 Q70 58 62 62 Z" fill="#9a7fd1"/>
+    <path d="M38 40 L30 14 L48 34 Z" fill="#5b8fd6"/><path d="M38 36 L33 20 L44 33Z" fill="#9a7fd1" stroke="none"/><path d="M62 40 L70 14 L52 34 Z" fill="#5b8fd6"/><path d="M62 36 L67 20 L56 33Z" fill="#9a7fd1" stroke="none"/>
+    <path d="M44 70 L42 84 M56 70 L58 84" fill="none" stroke="#5b8fd6" stroke-width="3"/>
+    <ellipse cx="50" cy="54" rx="16" ry="18" fill="#5b8fd6"/>
+    <path d="M41 50 Q50 66 59 50 Z" fill="#7a1f3d"/><path d="M43 51 L44.5 55 L46 51.5 Z M57 51 L55.5 55 L54 51.5 Z" fill="#fff" stroke-width="1"/>`},
 };
 const palSVG=(id,cls)=>`<svg viewBox="0 0 100 100" ${cls?`class="${cls}"`:''} aria-hidden="true"><g stroke="#2b2b2b" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${PALS[id].art}</g></svg>`;

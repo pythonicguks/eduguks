@@ -21,7 +21,7 @@ function viewRiddleResult(){
     <h2>${r.won?`${esc(P.name)} te rejoint !`:ok?'Énigmes résolues !':'Encore un petit effort !'}</h2>
     <div class="facts"><div class="fact"><b>${r.first} / ${r.n}</b><span>du premier coup</span></div><div class="fact"><b>${fmtPts(S.riddles[r.lv].best)}</b><span>meilleur score</span></div></div>`;
   if(r.won)h+=`<p class="note">${esc(P.name)} t'attend sur la carte. Retrouve tous tes compagnons dans « Mes compagnons ».</p>`;
-  else if(!S.pals[r.lv])h+=`<div class="gift">${palSVG(r.lv,'sil')}<div><b>Qui est-ce ?</b><br>Fais ${RIDDLE_GOAL} points sur ${r.n} pour que le compagnon de ${esc(L.name)} te rejoigne. ${worldOf(L)==='clock'?'Utilise l\'indice : la grande aiguille pour les minutes, la petite pour les heures.':'Utilise l\'astuce : le calcul inverse !'}</div></div>`;
+  else if(!S.pals[r.lv])h+=`<div class="gift">${palSVG(r.lv,'sil')}<div><b>Qui est-ce ?</b><br>Fais ${RIDDLE_GOAL} points sur ${r.n} pour que le compagnon de ${esc(L.name)} te rejoigne. ${worldOf(L)==='clock'?'Utilise l\'indice : la grande aiguille pour les minutes, la petite pour les heures.':worldOf(L)==='money'?'Commence par le plus gros billet du porte-monnaie qui ne dépasse pas le prix.':'Utilise l\'astuce : le calcul inverse !'}</div></div>`;
   h+=`<div class="actions"><button class="cta" data-riddle="${r.lv}" style="justify-content:center;text-align:center"><b>Rejouer l'énigme</b></button><button class="iconbtn" data-nav="pals" style="justify-content:center">Mes compagnons</button><button class="iconbtn" data-nav="home" style="justify-content:center">Retour à la carte</button></div></div>`;
   return h;
 }
@@ -41,7 +41,7 @@ function viewResult(){
   let h=`<div class="result"><div class="bigstars">${[0,1,2].map(i=>STAR(i<r.stars)).join('')}</div>
     <h2>${titles[r.stars]}</h2>
     <div class="facts"><div class="fact"><b>${r.first} / ${r.n}</b><span>du premier coup</span></div><div class="fact"><b>${r.best}</b><span>meilleure série</span></div></div>`;
-  if(r.stars===0&&r.lv!=='review')h+=`<p class="note">Il faut au moins 5 points pour gagner une étoile. ${worldOf(L)==='clock'?'Utilise les boutons « Minutes » et « Indice »':'Utilise les cubes et le calcul posé'}, tu vas y arriver !</p>`;
+  if(r.stars===0&&r.lv!=='review')h+=`<p class="note">Il faut au moins 5 points pour gagner une étoile. ${worldOf(L)==='clock'?'Utilise les boutons « Minutes » et « Indice »':worldOf(L)==='money'?'Utilise les boutons d\'aide et l\'indice':'Utilise les cubes et le calcul posé'}, tu vas y arriver !</p>`;
   if(r.newSticker)h+=`<div class="gift">${alien(r.newSticker.idx,r.newSticker.gold)}<div><b>Nouvel alien ${r.newSticker.gold?'doré ':''}!</b><br>Les habitants de ${esc(LEVELS[r.newSticker.idx].name)} rejoignent ton album.</div></div>`;
   if(r.unlockedNext){const n=LEVELS[LEVELS.indexOf(L)+1];h+=`<p class="note">Nouvelle planète débloquée : <b style="color:var(--star)">${esc(n.name)}</b></p>`}
   h+=`<div class="actions">`;
