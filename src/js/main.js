@@ -54,6 +54,8 @@ app.addEventListener('click',e=>{
   else if(a==='reset-no'){confirmReset=false;render()}
   else if(a==='reset-yes'){const keep=S.sound;S=fresh();S.sound=keep;save();confirmReset=false;screen='home';render()}
 });
+// appui long sur un bouton ou un dessin : pas de menu du navigateur (copier, enregistrer l'image…)
+document.addEventListener('contextmenu',e=>{if(e.target.closest('button,svg'))e.preventDefault()});
 document.addEventListener('keydown',e=>{
   if(screen!=='game'||e.target.tagName==='INPUT')return;
   if(/^[0-9]$/.test(e.key))press(e.key);
